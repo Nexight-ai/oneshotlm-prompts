@@ -1,6 +1,5 @@
 openrouter_id,vendor
 openai/gpt-4.1-mini,OpenAI
-qwen/qwen3.6-27b,Qwen
 qwen/qwen3.6-35b-a3b,Qwen
 qwen/qwen3.6-plus,Qwen
 inclusionai/ling-2.6-flash,InclusionAI
