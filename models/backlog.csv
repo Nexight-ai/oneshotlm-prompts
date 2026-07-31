@@ -1,6 +1,5 @@
 openrouter_id,vendor
 openai/gpt-4.1-mini,OpenAI
-qwen/qwen3.6-35b-a3b,Qwen
 qwen/qwen3.6-plus,Qwen
 inclusionai/ling-2.6-flash,InclusionAI
 meta-llama/llama-3.1-8b-instruct,Meta · Llama
@@ -78,7 +77,6 @@ deepseek/deepseek-r1,DeepSeek
 qwen/qwen3-14b,Qwen
 mistralai/devstral-2512,Mistral AI
 google/gemini-3.1-flash-image-preview,Google
-kwaipilot/kat-coder-pro-v2,Kwaipilot
 qwen/qwen3-30b-a3b,Qwen
 meta-llama/llama-guard-4-12b,Meta · Llama
 qwen/qwen2.5-vl-72b-instruct,Qwen

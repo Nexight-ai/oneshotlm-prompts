@@ -39,3 +39,5 @@ anthropic/claude-opus-4.8,Anthropic · Claude
 moonshotai/kimi-k2.7-code,Moonshot · Kimi
 moonshotai/kimi-k3,Moonshot · Kimi
 qwen/qwen3.6-27b,Qwen
+qwen/qwen3.6-35b-a3b,Qwen
+kwaipilot/kat-coder-pro-v2,Kwaipilot
