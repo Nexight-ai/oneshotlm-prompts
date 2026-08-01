@@ -43,3 +43,22 @@ qwen/qwen3.6-35b-a3b,Qwen
 kwaipilot/kat-coder-pro-v2,Kwaipilot
 deepseek/deepseek-v4-flash-0731,DeepSeek
 inclusionai/ling-3.0-flash,inclusionai
+openai/gpt-5.6-luna,OpenAI
+poolside/laguna-s-2.1,poolside
+google/gemini-3.5-flash-lite,Google
+openai/gpt-5.6-luna-pro,OpenAI
+inclusionai/ling-2.6-flash,InclusionAI
+openai/gpt-4.1-mini,OpenAI
+qwen/qwen3.6-plus,Qwen
+qwen/qwen3.7-flash,Qwen
+google/gemma-3-27b-it,Google
+qwen/qwen3.5-flash-02-23,Qwen
+meta-llama/llama-3.1-8b-instruct,Meta · Llama
+deepseek/deepseek-v3.1-terminus,DeepSeek
+nvidia/nemotron-3-nano-30b-a3b,NVIDIA
+openai/gpt-5-nano,OpenAI
+deepseek/deepseek-chat-v3.1,DeepSeek
+minimax/minimax-m2.5,MiniMax
+qwen/qwen3-next-80b-a3b-instruct,Qwen
+deepseek/deepseek-chat-v3-0324,DeepSeek
+qwen/qwen3.6-flash,Qwen

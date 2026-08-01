@@ -1,30 +1,16 @@
 openrouter_id,vendor
-openai/gpt-4.1-mini,OpenAI
-qwen/qwen3.6-plus,Qwen
-inclusionai/ling-2.6-flash,InclusionAI
-meta-llama/llama-3.1-8b-instruct,Meta · Llama
-openai/gpt-5-nano,OpenAI
-qwen/qwen3.5-flash-02-23,Qwen
 ibm-granite/granite-4.0-h-micro,IBM · Granite
-deepseek/deepseek-chat-v3.1,DeepSeek
 qwen/qwen3-coder,Qwen
 qwen/qwen3.5-35b-a3b,Qwen
-google/gemma-3-27b-it,Google
-nvidia/nemotron-3-nano-30b-a3b,NVIDIA
-deepseek/deepseek-chat-v3-0324,DeepSeek
 qwen/qwen3.5-397b-a17b,Qwen
 meta-llama/llama-4-maverick,Meta · Llama
 mistralai/mistral-small-3.2-24b-instruct,Mistral AI
 deepseek/deepseek-chat,DeepSeek
-deepseek/deepseek-v3.1-terminus,DeepSeek
 x-ai/grok-4.20,xAI · Grok
-minimax/minimax-m2.5,MiniMax
 meta-llama/llama-3.3-70b-instruct,Meta · Llama
-qwen/qwen3-next-80b-a3b-instruct,Qwen
 qwen/qwen3.5-27b,Qwen
 qwen/qwen3-coder-next,Qwen
 nvidia/nemotron-3-nano-omni-30b-a3b-reasoning,NVIDIA
-qwen/qwen3.6-flash,Qwen
 openai/gpt-4.1-nano,OpenAI
 qwen/qwen3.5-9b,Qwen
 z-ai/glm-4.6,Z.ai · GLM
@@ -99,11 +85,6 @@ bytedance-seed/seed-2.0-mini,ByteDance · Seed
 bytedance-seed/seed-2.0-lite,ByteDance · Seed
 z-ai/glm-4.5,Z.ai · GLM
 nvidia/nemotron-3.5-content-safety,NVIDIA
-openai/gpt-5.6-luna,OpenAI
-poolside/laguna-s-2.1,poolside
-google/gemini-3.5-flash-lite,Google
-openai/gpt-5.6-luna-pro,OpenAI
-qwen/qwen3.7-flash,Qwen
 nex-agi/nex-n2-mini,Nex AGI
 meituan/longcat-2.0,Meituan
 inclusionai/ling-2.6-1t,inclusionai
