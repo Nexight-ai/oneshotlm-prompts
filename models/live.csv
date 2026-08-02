@@ -62,3 +62,71 @@ minimax/minimax-m2.5,MiniMax
 qwen/qwen3-next-80b-a3b-instruct,Qwen
 deepseek/deepseek-chat-v3-0324,DeepSeek
 qwen/qwen3.6-flash,Qwen
+qwen/qwen3-coder,Qwen
+qwen/qwen3.5-35b-a3b,Qwen
+qwen/qwen3.5-397b-a17b,Qwen
+mistralai/mistral-small-3.2-24b-instruct,Mistral AI
+deepseek/deepseek-chat,DeepSeek
+x-ai/grok-4.20,xAI · Grok
+meta-llama/llama-3.3-70b-instruct,Meta · Llama
+qwen/qwen3.5-27b,Qwen
+qwen/qwen3-coder-next,Qwen
+openai/gpt-4.1-nano,OpenAI
+qwen/qwen3.5-9b,Qwen
+z-ai/glm-4.6,Z.ai · GLM
+mistralai/mistral-small-2603,Mistral AI
+deepseek/deepseek-v3.2-exp,DeepSeek
+qwen/qwen3-vl-32b-instruct,Qwen
+qwen/qwen3-vl-235b-a22b-instruct,Qwen
+qwen/qwen3-32b,Qwen
+qwen/qwen3-30b-a3b-instruct-2507,Qwen
+qwen/qwen3-vl-30b-a3b-instruct,Qwen
+amazon/nova-micro-v1,Amazon · Nova
+meta-llama/llama-4-scout,Meta · Llama
+z-ai/glm-4.5-air,Z.ai · GLM
+deepseek/deepseek-r1-0528,DeepSeek
+openai/gpt-4o-mini-2024-07-18,OpenAI
+qwen/qwen3-vl-8b-instruct,Qwen
+mistralai/ministral-14b-2512,Mistral AI
+mistralai/mistral-large-2512,Mistral AI
+mistralai/ministral-8b-2512,Mistral AI
+aion-labs/aion-2.0,Aion Labs
+qwen/qwen3.5-122b-a10b,Qwen
+openai/gpt-oss-safeguard-20b,OpenAI
+inception/mercury-2,Inception
+qwen/qwen3-235b-a22b-thinking-2507,Qwen
+x-ai/grok-build-0.1,xAI · Grok
+qwen/qwen3-8b,Qwen
+minimax/minimax-m2.1,MiniMax
+qwen/qwen-2.5-7b-instruct,Qwen
+qwen/qwen3-coder-30b-a3b-instruct,Qwen
+inclusionai/ring-2.6-1t,InclusionAI
+openai/gpt-5.1-codex-mini,OpenAI
+amazon/nova-lite-v1,Amazon · Nova
+meta-llama/llama-3.1-70b-instruct,Meta · Llama
+qwen/qwen3.5-plus-02-15,Qwen
+qwen/qwen-2.5-72b-instruct,Qwen
+amazon/nova-2-lite-v1,Amazon · Nova
+ibm-granite/granite-4.1-8b,IBM · Granite
+deepseek/deepseek-r1,DeepSeek
+qwen/qwen3-14b,Qwen
+qwen/qwen3-30b-a3b,Qwen
+openai/gpt-3.5-turbo,OpenAI
+moonshotai/kimi-k2-thinking,Moonshot · Kimi
+bytedance-seed/seed-1.6-flash,ByteDance · Seed
+mistralai/mistral-medium-3.1,Mistral AI
+qwen/qwen3-235b-a22b,Qwen
+qwen/qwen3.5-plus-20260420,Qwen
+mistralai/ministral-3b-2512,Mistral AI
+stepfun/step-3.5-flash,StepFun
+minimax/minimax-m2,MiniMax
+qwen/qwen3-coder-flash,Qwen
+bytedance-seed/seed-2.0-mini,ByteDance · Seed
+bytedance-seed/seed-2.0-lite,ByteDance · Seed
+z-ai/glm-4.5,Z.ai · GLM
+nex-agi/nex-n2-mini,Nex AGI
+inclusionai/ling-2.6-1t,inclusionai
+nex-agi/nex-n2-pro,Nex AGI
+kwaipilot/kat-coder-air-v2.5,kwaipilot
+aion-labs/aion-3.0-mini,Aion Labs
+thinkingmachines/inkling-small,Thinking Machines
