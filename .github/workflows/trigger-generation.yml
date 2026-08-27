@@ -1,0 +1,57 @@
+# Job A — on merge to main, find models newly added to live.csv that have no runs
+# yet in the app repo, and kick the Cloudflare orchestrator. Fire-and-forget: the
+# PR-builder (app repo, cron) picks the run-set up when generation completes.
+name: trigger-generation
+on:
+  push:
+    branches: [main]
+    paths: ["models/live.csv"]
+  workflow_dispatch: {}
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: prompts }
+
+      # App token so we can read the (private) app repo to see what already has runs.
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.OSLM_BOT_APP_ID }}
+          private-key: ${{ secrets.OSLM_BOT_PRIVATE_KEY }}
+          repositories: oneshotlm.com
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Nexight-ai/oneshotlm.com
+          token: ${{ steps.app-token.outputs.token }}
+          path: app
+          sparse-checkout: |
+            data/runs
+            runner/runs.config.json
+          sparse-checkout-cone-mode: false
+
+      - name: Compute new models
+        id: diff
+        run: |
+          node -e '
+            const fs = require("fs");
+            const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+            const live = fs.readFileSync("prompts/models/live.csv", "utf8").trim().split(/\r?\n/)
+              .map((l) => l.split(",")[0]).filter((x) => x && x !== "openrouter_id");
+            const runs = fs.existsSync("app/data/runs") ? fs.readdirSync("app/data/runs") : [];
+            const hasRuns = (m) => runs.some((f) => f.endsWith("-" + slug(m) + ".json"));
+            const todo = [...new Set(live)].filter((m) => !hasRuns(m));
+            console.log("new models:", todo.join(", ") || "(none)");
+            fs.writeFileSync(process.env.GITHUB_OUTPUT, `models=${JSON.stringify(todo)}\n`, { flag: "a" });
+          '
+
+      - name: Kick orchestrator
+        if: steps.diff.outputs.models != '[]'
+        run: |
+          curl -fsS -X POST "${{ vars.ORCH_URL }}/run" \
+            -H "authorization: Bearer ${{ secrets.ORCH_TRIGGER_SECRET }}" \
+            -H "content-type: application/json" \
+            -d "{\"models\": ${{ steps.diff.outputs.models }} }"
