@@ -50,8 +50,13 @@ jobs:
 
       - name: Kick orchestrator
         if: steps.diff.outputs.models != '[]'
+        env:
+          MODELS: ${{ steps.diff.outputs.models }}
+          ORCH_URL: ${{ vars.ORCH_URL }}
+          ORCH_TRIGGER_SECRET: ${{ secrets.ORCH_TRIGGER_SECRET }}
         run: |
-          curl -fsS -X POST "${{ vars.ORCH_URL }}/run" \
-            -H "authorization: Bearer ${{ secrets.ORCH_TRIGGER_SECRET }}" \
-            -H "content-type: application/json" \
-            -d "{\"models\": ${{ steps.diff.outputs.models }} }"
+          # Build the JSON with jq so the model array can't break shell quoting.
+          jq -nc --argjson m "$MODELS" '{models: $m}' \
+            | curl -fsS -X POST "$ORCH_URL/run" \
+                -H "authorization: Bearer $ORCH_TRIGGER_SECRET" \
+                -H "content-type: application/json" --data @-
