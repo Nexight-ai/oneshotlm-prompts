@@ -33,8 +33,11 @@ jobs:
           sparse-checkout: |
             data/runs
             runner/runs.config.json
-            shared/identity.js
+            shared
           sparse-checkout-cone-mode: false
+
+      - name: Install shared prompt parser
+        run: npm ci --prefix app/shared
 
       - name: Compute new models
         id: diff
@@ -69,11 +72,17 @@ jobs:
           node --input-type=module <<'NODE'
           import { createHash } from 'node:crypto';
           import { readdirSync, readFileSync } from 'node:fs';
+          import { parseFrontmatter } from './app/shared/frontmatter.js';
           const promptFiles = readdirSync('prompts/prompts/live').filter(p => p.endsWith('.md')).sort();
           const promptRevision = createHash('sha256').update(JSON.stringify(promptFiles.map(p => [p, readFileSync(`prompts/prompts/live/${p}`, 'utf8')]))).digest('hex');
+          const prompts = promptFiles.map(file => {
+            const { fm, body } = parseFrontmatter(readFileSync(`prompts/prompts/live/${file}`, 'utf8'));
+            return { id: file.slice(0, -3), prompt: body, libs: fm.libs || [] };
+          });
+          const promptSetSha256 = createHash('sha256').update(JSON.stringify(prompts)).digest('hex');
           const models = JSON.parse(process.env.MODELS).sort();
           for (const model of models) {
-            const body = JSON.stringify({ models: [model] });
+            const body = JSON.stringify({ models: [model], prompts: prompts.map(p => p.id), promptSetSha256 });
             const suffix = createHash('sha256').update(body).digest('hex').slice(0, 16);
             const execution = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch' ? process.env.GITHUB_RUN_ID : `automatic:${promptRevision}`;
             const key = `github:${process.env.GITHUB_REPOSITORY_ID}:${execution}:${suffix}`;
