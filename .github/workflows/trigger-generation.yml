@@ -12,6 +12,8 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
       - uses: actions/checkout@v4
         with: { path: prompts }
 
@@ -31,18 +33,27 @@ jobs:
           sparse-checkout: |
             data/runs
             runner/runs.config.json
+            shared
           sparse-checkout-cone-mode: false
+
+      - name: Install shared prompt parser
+        run: npm ci --prefix app/shared
 
       - name: Compute new models
         id: diff
         run: |
-          node -e '
-            const fs = require("fs");
-            const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import { runId } from "./app/shared/identity.js";
             const live = fs.readFileSync("prompts/models/live.csv", "utf8").trim().split(/\r?\n/)
               .map((l) => l.split(",")[0]).filter((x) => x && x !== "openrouter_id");
-            const runs = fs.existsSync("app/data/runs") ? fs.readdirSync("app/data/runs") : [];
-            const hasRuns = (m) => runs.some((f) => f.endsWith("-" + slug(m) + ".json"));
+            const prompts = fs.readdirSync("prompts/prompts/live").filter(f => f.endsWith(".md")).map(f => f.slice(0, -3));
+            const hasRuns = (m) => prompts.every(p => {
+              const path = `app/data/runs/${runId(p,m)}.json`;
+              if (!fs.existsSync(path)) return false;
+              const r = JSON.parse(fs.readFileSync(path, "utf8"));
+              return r.status === "done" || (r.status === "failed" && Boolean(r.error));
+            });
             const todo = [...new Set(live)].filter((m) => !hasRuns(m));
             console.log("new models:", todo.join(", ") || "(none)");
             fs.writeFileSync(process.env.GITHUB_OUTPUT, `models=${JSON.stringify(todo)}\n`, { flag: "a" });
@@ -55,8 +66,37 @@ jobs:
           ORCH_URL: ${{ vars.ORCH_URL }}
           ORCH_TRIGGER_SECRET: ${{ secrets.ORCH_TRIGGER_SECRET }}
         run: |
-          # Build the JSON with jq so the model array can't break shell quoting.
-          jq -nc --argjson m "$MODELS" '{models: $m}' \
-            | curl -fsS -X POST "$ORCH_URL/run" \
-                -H "authorization: Bearer $ORCH_TRIGGER_SECRET" \
-                -H "content-type: application/json" --data @-
+          # Automatic pushes dedupe by model and prompt content even while the PR
+          # is unmerged. Manual dispatch uses RUN_ID for a deliberate new execution;
+          # RUN_ATTEMPT is excluded so reruns/retries retain the same request.
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readdirSync, readFileSync } from 'node:fs';
+          import { parseFrontmatter } from './app/shared/frontmatter.js';
+          const promptFiles = readdirSync('prompts/prompts/live').filter(p => p.endsWith('.md')).sort();
+          const promptRevision = createHash('sha256').update(JSON.stringify(promptFiles.map(p => [p, readFileSync(`prompts/prompts/live/${p}`, 'utf8')]))).digest('hex');
+          const prompts = promptFiles.map(file => {
+            const { fm, body } = parseFrontmatter(readFileSync(`prompts/prompts/live/${file}`, 'utf8'));
+            return { id: file.slice(0, -3), prompt: body, libs: fm.libs || [] };
+          });
+          const promptSetSha256 = createHash('sha256').update(JSON.stringify(prompts)).digest('hex');
+          const models = JSON.parse(process.env.MODELS).sort();
+          for (const model of models) {
+            const body = JSON.stringify({ models: [model], prompts: prompts.map(p => p.id), promptSetSha256 });
+            const suffix = createHash('sha256').update(body).digest('hex').slice(0, 16);
+            const execution = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch' ? process.env.GITHUB_RUN_ID : `automatic:${promptRevision}`;
+            const key = `github:${process.env.GITHUB_REPOSITORY_ID}:${execution}:${suffix}`;
+            let response;
+            for (let attempt = 0; attempt < 4; attempt++) {
+              try {
+                response = await fetch(`${process.env.ORCH_URL}/run`, {
+                  method: 'POST', signal: AbortSignal.timeout(60000),
+                  headers: { authorization: `Bearer ${process.env.ORCH_TRIGGER_SECRET}`, 'content-type': 'application/json', 'Idempotency-Key': key }, body,
+                });
+                if (response.ok) { console.log(await response.text()); break; }
+                if (response.status < 500 || attempt === 3) throw Error(`submission HTTP ${response.status}: ${await response.text()}`);
+              } catch (error) { if (attempt === 3 || (response && response.status < 500)) throw error; }
+              await new Promise(resolve => setTimeout(resolve, 5000 * (attempt + 1)));
+            }
+          }
+          NODE
