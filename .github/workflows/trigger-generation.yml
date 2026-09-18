@@ -6,7 +6,12 @@ on:
   push:
     branches: [main]
     paths: ["models/live.csv"]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Exact live model ID to run (blank checks all incomplete models)"
+        required: false
+        type: string
 
 jobs:
   trigger:
@@ -41,6 +46,8 @@ jobs:
 
       - name: Compute new models
         id: diff
+        env:
+          REQUESTED_MODEL: ${{ inputs.model }}
         run: |
           node --input-type=module -e '
             import fs from "node:fs";
@@ -54,7 +61,9 @@ jobs:
               const r = JSON.parse(fs.readFileSync(path, "utf8"));
               return r.status === "done" || (r.status === "failed" && Boolean(r.error));
             });
-            const todo = [...new Set(live)].filter((m) => !hasRuns(m));
+            const requested = (process.env.REQUESTED_MODEL || "").trim();
+            if (requested && !live.includes(requested)) throw Error(`model is not in models/live.csv: ${requested}`);
+            const todo = [...new Set(live)].filter((m) => (!requested || m === requested) && !hasRuns(m));
             console.log("new models:", todo.join(", ") || "(none)");
             fs.writeFileSync(process.env.GITHUB_OUTPUT, `models=${JSON.stringify(todo)}\n`, { flag: "a" });
           '
