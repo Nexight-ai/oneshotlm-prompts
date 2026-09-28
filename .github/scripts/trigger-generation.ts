@@ -9,10 +9,9 @@ for (let attempt = 0; attempt < 4; attempt++) {
     });
     if (response.ok) { console.log(await response.text()); break; }
     const message = `Admission ${response.status}: ${await response.text()}`;
-    if (response.status < 500) throw new TypeError(message);
     throw Error(message);
   } catch (error) {
-    if (error instanceof TypeError || attempt === 3) throw error;
+    if (attempt === 3) throw error;
     await new Promise(resolve => setTimeout(resolve, 5000 * (attempt + 1)));
   }
 }
