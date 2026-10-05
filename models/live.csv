@@ -144,3 +144,4 @@ deepseek/deepseek-v4.1-flash,DeepSeek
 qwen/qwen3.8-flash,Qwen
 google/gemini-3.8-flash,Google
 openai/gpt-6.1-sol,OpenAI
+anthropic/claude-sonnet-5.5,Anthropic
