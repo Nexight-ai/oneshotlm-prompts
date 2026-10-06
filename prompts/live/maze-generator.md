@@ -15,6 +15,6 @@ Required behavior:
 - Provide New Maze and Replay Solver. New Maze cancels the previous animation and generates a fresh maze; Replay Solver uses the existing maze without changing its walls.
 - Mark start, finish, exploration, and solution with distinguishable styles and a short legend.
 
-Verify: generate a maze, follow the displayed solution through open passages, replay the solver, and request a new maze during an animation. Confirm no stale animation continues on the new maze.
+Verify: Inspect maze-carving progress and request New Maze while animation is active. Check that the new generation replaces the previous view cleanly. If the solver starts during inspection, check that its visible steps follow open passages.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

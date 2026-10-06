@@ -15,6 +15,6 @@ Required behavior:
 - Award 100, 300, 500, or 800 points for clearing one, two, three, or four rows with one piece, multiplied by the current level. Start at level 1 and increase gravity speed every ten cleared lines.
 - If a new piece cannot spawn, show Game Over. Provide Pause/Resume and Restart, with restart resetting the board, score, level, and piece sequence state. Hold and ghost pieces are optional.
 
-Verify: move, rotate, soft-drop, hard-drop, clear a row, pause/resume, and restart. Check that blocked rotations preserve state and blocked spawning ends the game.
+Verify: Move and rotate the first piece, then hard-drop it. Check that it locks into the board, a new piece spawns, and the next-piece preview advances. Pause and resume, then use Restart and check the cleared board, score, and level.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

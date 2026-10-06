@@ -17,6 +17,6 @@ Required behavior:
 - Choose reasonable sizes and physical constants that keep the simulation stable: balls remain contained and do not persistently overlap or gain unbounded speed.
 - Provide Pause/Resume and Reset. Reset restores the initial ball arrangement and wall orientation.
 
-Verify: observe at least ten seconds of motion, including collisions with moving walls. Check that all 20 balls remain contained, their numbers rotate, and pause/resume and reset work.
+Verify: Sample several moments of the initial fall and collisions. Check that the enclosure rotates, visible ball contacts produce bounce responses, and the numbers rotate with the balls. Use Reset and compare the restored arrangement and wall orientation with the initial view.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

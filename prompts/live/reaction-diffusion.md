@@ -15,6 +15,6 @@ Required behavior:
 - Clicking or dragging adds V and reduces U near the pointer. Provide Pause/Resume and Reset; Reset restores the initial fields and seed.
 - Choose Canvas 2D or WebGL, and bound grid resolution and work per frame to keep interaction responsive.
 
-Verify: observe pattern evolution over time, seed a separate region, pause/resume, and reset. Check that fields remain finite and mouse input changes subsequent growth.
+Verify: Sample early field evolution, then seed a separate region with the pointer. Check that the added region affects the following frames. Pause and resume, then reset and compare the restored central seed with the initial scene.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

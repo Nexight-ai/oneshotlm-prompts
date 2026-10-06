@@ -16,6 +16,6 @@ Required behavior:
 - Clearing all bricks shows a win state; losing all lives shows Game Over. Restart restores all bricks, score, and lives.
 - Show the controls and generate all graphics using Phaser Graphics or generated textures. Do not load image or audio assets.
 
-Verify: launch, move the paddle, break bricks, lose a ball, and restart. Confirm that score and lives change only for the corresponding events.
+Verify: Launch the ball, move the paddle, and inspect the opening bounces. Check that contact changes the ball direction and that a brick hit removes the brick and increases the score. Confirm the paddle stays inside the playfield.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

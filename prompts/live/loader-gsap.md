@@ -16,6 +16,6 @@ Required behavior:
 - Center the composition and keep it visible at the supplied viewport. Use HTML/CSS or inline SVG; no external assets or paid GSAP plugins are available.
 - Choose the palette and detailed choreography freely. No backend loading operation is required.
 
-Verify: watch at least two complete loops, then pause, resume, and restart. Check the loop boundary for abrupt changes and confirm both shapes and dots follow the controls.
+Verify: Sample the timeline at several moments to inspect shape changes, staggered dot motion, and smooth transitions. Pause and resume to check that animation continues from the paused state, then use Restart and check the starting composition.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

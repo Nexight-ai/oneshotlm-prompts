@@ -65,8 +65,10 @@ Maintainers move prompts from `prompts/backlog/` to `prompts/live/` once they're
 Each live prompt is a standalone build specification: name the application,
 require `index.html` in the working directory, identify available libraries,
 and list observable behavior, controls, initial/reset states, and a short
-verification checklist. Keep visual choices open unless they are part of the
-task. Do not imply requirements through the title or tags alone. Agents should
+verification checklist. Use positive instructions for representative checks
+that fit a brief browser pass and the remaining runtime budget. Focus on
+accessible interactions and their visible effects. Keep visual choices open
+unless they are part of the task. Do not imply requirements through the title or tags alone. Agents should
 report what they verified and any limitations of their tools.
 
 Prompt bodies complement the harness instructions; they do not replace its

@@ -15,6 +15,6 @@ Required behavior:
 - Provide Pause/Resume and Reset. Reset restores the stated initial conditions and clears the trail.
 - Use a numerically stable integration scheme and time step so ordinary playback does not explode or freeze.
 
-Verify: observe the coupled motion at several times, check constant rod lengths, pause/resume, and reset. Check for non-finite state and obvious numerical energy drift during a sustained run.
+Verify: Sample the pendulum at several moments to inspect coupled motion, connected rods, and the lower-bob trail. Pause and resume to check the motion control, then reset and confirm that the starting pose and cleared trail return.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

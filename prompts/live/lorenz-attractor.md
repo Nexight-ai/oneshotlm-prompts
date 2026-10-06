@@ -16,6 +16,6 @@ Required behavior:
 - Provide Pause/Resume and Reset. Pause freezes trajectory growth while camera controls remain usable; Reset clears the trail and restores the initial simulation state.
 - Only the core global THREE library is provided. Implement camera interaction without importing unavailable addons.
 
-Verify: observe both lobes forming, orbit and zoom, pause trajectory growth, and reset. Check that simulated coordinates remain finite and the trail does not grow without bound.
+Verify: Sample trajectory growth, orbit the camera, and check that the existing trail remains connected and visible from the new angle. Pause growth while moving the camera, then reset and check that the trail starts again from the initial state.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

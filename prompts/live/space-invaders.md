@@ -15,6 +15,6 @@ Required behavior:
 - Start with three lives. Enemy shots cost a life with brief protection from repeated damage. Aliens reaching the player zone or zero lives causes Game Over; clearing the aliens shows a win state.
 - Provide Restart to restore aliens, bunkers, score, lives, and player position. Bound projectile lifetime and fire rate.
 
-Verify: move and fire, kill an alien, damage a bunker, take a hit, and restart. Check score/lives and the win and loss conditions.
+Verify: Test movement and firing during the opening formation. Check alien motion and inspect a shot hitting a bunker or alien for visible damage or score feedback. Use Restart and check the initial formation, bunkers, lives, and score.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

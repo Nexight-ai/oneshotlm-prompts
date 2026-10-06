@@ -15,6 +15,6 @@ Required behavior:
 - Clearing all asteroids starts another wave. Losing all lives shows Game Over and a Restart control that resets score, lives, and the arena.
 - Keep projectile lifetime bounded and prevent gameplay keys from scrolling the page.
 
-Verify: rotate, thrust, fire, observe asteroid splitting and score changes, and exercise life loss and restart.
+Verify: Test rotation, thrust, and firing near the initial spawn. Check that the ship changes heading, gains momentum, and emits moving projectiles. Sample the scene to inspect screen wrapping when an object crosses an edge.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

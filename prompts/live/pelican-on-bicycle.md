@@ -16,6 +16,6 @@ Required behavior:
 - Keep the complete subject visible with a suitable viewBox and responsive sizing. Include an SVG title or accessible description.
 - Choose the art style, colors, background, and composition freely. Animation and interactive controls are not required.
 
-Verify: render the page, inspect the whole composition, and confirm that the recognizable bird and bicycle parts are visible and not clipped. Check that the main illustration is inline vector content.
+Verify: Inspect the complete illustration for a recognizable pelican, connected bicycle geometry, a riding pose, and unclipped framing. Check that the main artwork consists of inline SVG shapes and paths and has an accessible title or description.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

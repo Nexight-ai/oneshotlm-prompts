@@ -16,6 +16,6 @@ Required behavior:
 - Release held voices when the pointer is released outside a key or the window loses focus, so notes cannot remain stuck.
 - Activate audio through a user gesture and synthesize all sound without audio files. Display the computer-key mapping.
 
-Verify: play several notes, hold and release a note, try a chord, and check focus-loss or pointer-release cleanup where tools permit. Report audio or held-key behavior that your tools cannot verify.
+Verify: Play a few notes using the available mouse and keyboard actions. Check note/key labeling, any observable press-and-release highlighting, and the console after audio activation. Briefly inspect the input handlers for matching note-start and note-release behavior.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

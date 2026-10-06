@@ -15,6 +15,6 @@ Required behavior:
 - Each open application appears in the taskbar. Clicking its taskbar entry brings its window to the front. The Start menu opens and closes and dismisses after launching an application.
 - Keep title bars reachable within the desktop. Use CSS and inline drawings for the retro chrome and icons; no external assets.
 
-Verify: open both applications, type in Notepad, drag and switch focus between windows, close and reopen one, and operate the Start menu and taskbar. Confirm the clock updates.
+Verify: Open Notepad through the Start menu, enter text, and drag its title bar. Open About and switch focus using a taskbar entry. Check that the selected window comes to the front and that closing a window removes its taskbar entry.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

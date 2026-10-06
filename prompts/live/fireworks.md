@@ -15,6 +15,6 @@ Required behavior:
 - Provide Clear to remove active shells, particles, and trails. Keep controls usable after resizing.
 - Use procedural drawing only. Choose the visual design, palette, and trails freely while keeping the launch-to-burst sequence visible.
 
-Verify: inspect the initial launch and burst across multiple moments, click several different locations, wait for particles to fade, and use Clear. Confirm that repeated launches do not accumulate expired particles.
+Verify: Trigger a shell at a chosen location and sample its ascent, burst, and early particle fall. Check that the click affects the launch target and that particles visibly spread and fade. Use Clear and confirm the scene is emptied.
 
-Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
+Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.
