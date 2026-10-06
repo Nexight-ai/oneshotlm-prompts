@@ -3,4 +3,18 @@ title: Double pendulum
 category: physics
 tags: [canvas, physics, simulation, chaos, animation]
 ---
-Simulate a chaotic double pendulum on a canvas using the correct equations of motion, drawing the arms and a colorful fading trail of the tip.
+Build a planar double-pendulum simulation on a canvas with a colorful fading trail at the lower bob.
+
+Use HTML, CSS, and JavaScript as needed. Write it to `index.html` in the current working directory using your file tools. Inline your own CSS and JavaScript. Do not use external assets, CDNs, or network requests. No third-party libraries are provided.
+
+Required behavior:
+
+- Model two point masses connected by massless rigid rods under gravity, without damping or external driving. Use the coupled equations of motion rather than independent sine-wave animations.
+- Use equal masses and rod lengths, gravity of 9.81 in consistent simulation units, initial angles of 120 and -10 degrees measured from downward vertical, and zero initial angular velocities.
+- Draw a fixed pivot, both rods and bobs, and a bounded fading trail of the lower bob. Keep both rod lengths constant and the pendulum visible.
+- Provide Pause/Resume and Reset. Reset restores the stated initial conditions and clears the trail.
+- Use a numerically stable integration scheme and time step so ordinary playback does not explode or freeze.
+
+Verify: observe the coupled motion at several times, check constant rod lengths, pause/resume, and reset. Check for non-finite state and obvious numerical energy drift during a sustained run.
+
+Use the available browser tools to inspect the running application and console, exercise the checks above, and fix problems you find. Save the final file, then briefly report what you verified and any limitations you could not verify. Prioritize the required behavior; visual styling and implementation details not specified above are your choice.
