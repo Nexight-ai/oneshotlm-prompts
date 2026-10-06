@@ -3,4 +3,16 @@ title: Boids flocking
 category: physics
 tags: [canvas, simulation, generative, interactive, animation]
 ---
-Create a full-screen flocking simulation of boids using separation, alignment, and cohesion, drawn as oriented triangles that steer smoothly and flee from the mouse cursor.
+Build a full-screen canvas flocking simulation with 150 boids drawn as oriented triangles.
+
+Use HTML, CSS, and JavaScript as needed. Write it to `index.html` in the current working directory using your file tools. Inline your own CSS and JavaScript. Do not use external assets, CDNs, or network requests. No third-party libraries are provided.
+
+Required behavior:
+
+- Combine separation, alignment, and cohesion so nearby boids avoid crowding, align their headings, and form moving groups. Triangles point in their direction of travel.
+- Use bounded speed and steering so motion changes smoothly instead of teleporting. Wrap boids across screen edges.
+- Boids within a visible or documented cursor-influence radius steer away from the pointer. They resume flocking after the pointer moves away.
+- Provide Pause/Resume and Reset. Pause freezes simulation state; Reset restores a fresh population of 150 boids.
+- Fit the canvas to the viewport and keep the population and controls usable after resizing.
+
+Verify: Sample the flock at several moments to check coordinated movement and triangles pointing along their travel direction. Try the cursor interaction with available pointer actions, then pause and resume to check that the flock freezes and continues.

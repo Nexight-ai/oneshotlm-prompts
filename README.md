@@ -1,7 +1,7 @@
 # oneshotlm-prompts
 
 Source of truth for the **prompts** and **models** behind [oneshotlm.com](https://oneshotlm.com) —
-where many LLMs each get one shot at building the same thing.
+where models build the same applications in autonomous sessions with browser tools.
 
 Want a prompt or a model added? Open a pull request. No code required.
 
@@ -30,9 +30,20 @@ category: 3d
 tags: [3d, webgl, three.js, animation, generative]
 libs: [three.min.js]
 ---
-Using the pre-provided three.min.js (global THREE), render a full-screen scene
-with a rotating icosahedron lit by two colored point lights, orbit-style
-auto-rotation, and a subtle starfield background.
+Build a full-screen Three.js scene with a rotating icosahedron.
+
+Write `index.html` in the current working directory. Inline your own CSS and
+JavaScript. Use the provided `three.min.js` (global THREE) through a local
+script tag; do not fetch external resources.
+
+Required behavior:
+
+- Light the object with two differently colored point lights.
+- Animate object rotation and camera orbit against a procedural starfield.
+- Provide Pause/Resume and Reset controls.
+
+Verify the animation and controls in the browser, inspect the console, and
+fix any problems before saving the final file.
 ```
 
 Frontmatter:
@@ -48,6 +59,31 @@ Frontmatter:
 Everything **below** the frontmatter is the prompt sent verbatim to every model. Keep it self-contained: the model outputs a single HTML file that runs in a sandboxed iframe with no network access, so no external assets, CDNs, or API calls — only the `libs` listed above are available.
 
 Maintainers move prompts from `prompts/backlog/` to `prompts/live/` once they're queued to run.
+
+## Writing and revising prompts
+
+Each live prompt is a standalone build specification: name the application,
+require `index.html` in the working directory, identify available libraries,
+and list observable behavior, controls, initial/reset states, and a short
+verification checklist. Use positive instructions for representative checks
+that fit a brief browser pass and the remaining runtime budget. Focus on
+accessible interactions and their visible effects. Keep visual choices open
+unless they are part of the task. Do not imply requirements through the title
+or tags alone.
+
+Keep task-specific verification checks in each prompt. The common browser
+inspection, repair, budget, and verification-reporting instructions live in
+[`shared/agent.js`](https://github.com/Nexight-ai/oneshotlm.com/blob/main/shared/agent.js)
+as part of the harness system prompt. The verification checklist asks the
+building agent to test its work; it does not add a separate evaluator or rating
+step.
+
+Preserve prompt IDs and frontmatter when revising an existing task. The current
+pipeline generates added model/prompt pairs, so editing prompt text alone does
+not regenerate historical outputs. Future additions use the revised text from
+their pinned source commit. Compare runs using their actual prompt and source
+revision; results from different specifications are not directly equivalent.
+
 
 ## Layout
 

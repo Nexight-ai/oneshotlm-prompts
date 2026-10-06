@@ -4,4 +4,16 @@ category: games
 tags: [game, phaser, shooter, interactive, arcade]
 libs: [phaser.min.js]
 ---
-Using the pre-provided phaser.min.js (global Phaser), build a top-down alien shooter: move with WASD, aim and fire at waves of advancing aliens, with health, score, and increasing difficulty. Use ONLY procedurally generated graphics, no external image or audio assets.
+Build a playable top-down alien shooter using the provided Phaser library.
+
+Use HTML, CSS, and JavaScript as needed. Write it to `index.html` in the current working directory using your file tools. Inline your own CSS and JavaScript. Do not use external assets, CDNs, or network requests. Use the provided `phaser.min.js` (global `Phaser`) through a plain local script tag; the runner will inline it into the final artifact.
+
+Required behavior:
+
+- Move the player with WASD, aim toward the mouse pointer, and fire with the left mouse button. Display the controls on screen.
+- Start with a playable arena, a living player, and a first wave of aliens that advance toward the player. Player shots damage aliens; contact with aliens damages the player.
+- Display health, score, and wave number. Award points for kills. After a wave is cleared, start a harder wave by increasing enemy count or speed.
+- At zero health, stop gameplay and show a game-over state with Restart. Restart restores health, score, and the first wave.
+- Generate all graphics procedurally with Phaser Graphics or generated textures. Do not use external image or audio assets.
+
+Verify: Test movement, aiming, and firing in the opening encounter. Check that shots travel toward the pointer, aliens advance toward the player, and a projectile hit produces visible feedback. Reload and check the initial health, score, and wave.
