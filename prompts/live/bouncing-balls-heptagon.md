@@ -18,5 +18,3 @@ Required behavior:
 - Provide Pause/Resume and Reset. Reset restores the initial ball arrangement and wall orientation.
 
 Verify: Sample several moments of the initial fall and collisions. Check that the enclosure rotates, visible ball contacts produce bounce responses, and the numbers rotate with the balls. Use Reset and compare the restored arrangement and wall orientation with the initial view.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

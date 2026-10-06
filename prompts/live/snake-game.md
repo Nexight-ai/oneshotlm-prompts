@@ -16,5 +16,3 @@ Required behavior:
 - Display the controls and score. Prevent arrow keys from scrolling the page.
 
 Verify: Start the game and make a few turns to check grid-aligned movement and direction response. Pause and resume, then use Restart and check that snake length and score return to their initial values and food occupies a free cell.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

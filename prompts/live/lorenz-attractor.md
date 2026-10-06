@@ -17,5 +17,3 @@ Required behavior:
 - Only the core global THREE library is provided. Implement camera interaction without importing unavailable addons.
 
 Verify: Sample trajectory growth, orbit the camera, and check that the existing trail remains connected and visible from the new angle. Pause growth while moving the camera, then reset and check that the trail starts again from the initial state.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

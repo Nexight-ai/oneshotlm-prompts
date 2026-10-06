@@ -17,5 +17,3 @@ Required behavior:
 - Choose the art style, colors, background, and composition freely. Animation and interactive controls are not required.
 
 Verify: Inspect the complete illustration for a recognizable pelican, connected bicycle geometry, a riding pose, and unclipped framing. Check that the main artwork consists of inline SVG shapes and paths and has an accessible title or description.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

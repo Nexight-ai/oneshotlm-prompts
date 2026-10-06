@@ -16,5 +16,3 @@ Required behavior:
 - Use procedural drawing and colors only. Fit the canvas to the viewport; choose the palette and decorative details freely.
 
 Verify: Sample several moments to inspect grid travel, sun movement, and the reflected colors below the horizon. Pause and resume to check animation control, then use Restart and compare the starting composition.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

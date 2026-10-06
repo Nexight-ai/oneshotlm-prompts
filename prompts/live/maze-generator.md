@@ -16,5 +16,3 @@ Required behavior:
 - Mark start, finish, exploration, and solution with distinguishable styles and a short legend.
 
 Verify: Inspect maze-carving progress and request New Maze while animation is active. Check that the new generation replaces the previous view cleanly. If the solver starts during inspection, check that its visible steps follow open passages.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

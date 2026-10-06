@@ -17,5 +17,3 @@ Required behavior:
 - Provide Reset view to restore the initial camera framing without replacing the graph data.
 
 Verify: Drag one node and check that connected links follow it while the camera stays in place. Pan the background and zoom to check camera movement, then use Reset view and confirm the graph returns to its initial framing.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

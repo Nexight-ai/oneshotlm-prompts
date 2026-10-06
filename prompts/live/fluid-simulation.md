@@ -16,5 +16,3 @@ Required behavior:
 - Bound simulation resolution and work per frame so controls remain responsive at a 1200 by 800 viewport.
 
 Verify: Drag through the canvas and sample the flow after release. Check that dye follows the drag, continues swirling, and responds to a second drag in another direction. Use Clear, then drag again to check that a fresh flow can start.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

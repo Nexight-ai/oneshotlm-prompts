@@ -17,5 +17,3 @@ Required behavior:
 - Fit the viewport and keep controls responsive at 1200 by 800. Choose the palette, field scale, and particle speed freely.
 
 Verify: Sample the animation at several moments to inspect coherent nearby particle motion, fading trails, and changing colors. Pause and resume, then use Restart and check that the trails clear and a new arrangement appears.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

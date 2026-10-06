@@ -16,5 +16,3 @@ Required behavior:
 - If a new piece cannot spawn, show Game Over. Provide Pause/Resume and Restart, with restart resetting the board, score, level, and piece sequence state. Hold and ghost pieces are optional.
 
 Verify: Move and rotate the first piece, then hard-drop it. Check that it locks into the board, a new piece spawns, and the next-piece preview advances. Pause and resume, then use Restart and check the cleared board, score, and level.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

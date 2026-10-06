@@ -17,5 +17,3 @@ Required behavior:
 - Only core global THREE is provided; implement camera controls without importing unavailable addons. A solver is not required.
 
 Verify: Turn one face and apply its inverse, checking that the visible stickers return to their starting arrangement. Orbit the camera to inspect the cube from another angle, then use Reset and check the solved appearance and initial framing.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

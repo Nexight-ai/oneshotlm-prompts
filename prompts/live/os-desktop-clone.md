@@ -16,5 +16,3 @@ Required behavior:
 - Keep title bars reachable within the desktop. Use CSS and inline drawings for the retro chrome and icons; no external assets.
 
 Verify: Open Notepad through the Start menu, enter text, and drag its title bar. Open About and switch focus using a taskbar entry. Check that the selected window comes to the front and that closing a window removes its taskbar entry.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

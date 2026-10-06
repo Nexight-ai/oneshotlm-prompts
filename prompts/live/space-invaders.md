@@ -16,5 +16,3 @@ Required behavior:
 - Provide Restart to restore aliens, bunkers, score, lives, and player position. Bound projectile lifetime and fire rate.
 
 Verify: Test movement and firing during the opening formation. Check alien motion and inspect a shot hitting a bunker or alien for visible damage or score feedback. Use Restart and check the initial formation, bunkers, lives, and score.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

@@ -16,5 +16,3 @@ Required behavior:
 - Unlock audio through a user gesture and synthesize distinct percussion sounds from oscillators/noise and envelopes; do not load audio files.
 
 Verify: Toggle a step and start playback. Check that the playhead advances across the grid and responds to a BPM change. Stop and start again, checking that the displayed pattern is retained and the playhead restarts from the first step.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

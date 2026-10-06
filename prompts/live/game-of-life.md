@@ -16,5 +16,3 @@ Required behavior:
 - Fit the grid and controls within the viewport while keeping cells distinguishable.
 
 Verify: Step the initial blinker twice and compare its alternating arrangements. Paint a short stroke while paused and check consistent cell painting, then use Clear and confirm the grid and generation counter reset.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

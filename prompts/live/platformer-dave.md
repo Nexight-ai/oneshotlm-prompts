@@ -16,5 +16,3 @@ Required behavior:
 - Provide Restart after either outcome and during play. Restart restores the level, trophy, enemies, and player position. Keep the level's route physically reachable.
 
 Verify: Test movement and a jump near the starting area. Check that the player lands on a nearby solid surface and that the trophy and exit are visibly identifiable. Use Restart and check that the initial player and collectible state return.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

@@ -68,12 +68,15 @@ and list observable behavior, controls, initial/reset states, and a short
 verification checklist. Use positive instructions for representative checks
 that fit a brief browser pass and the remaining runtime budget. Focus on
 accessible interactions and their visible effects. Keep visual choices open
-unless they are part of the task. Do not imply requirements through the title or tags alone. Agents should
-report what they verified and any limitations of their tools.
+unless they are part of the task. Do not imply requirements through the title
+or tags alone.
 
-Prompt bodies complement the harness instructions; they do not replace its
-runtime budget or browser tools. The verification checklist asks the building
-agent to test its work; it does not add a separate evaluator or rating step.
+Keep task-specific verification checks in each prompt. The common browser
+inspection, repair, budget, and verification-reporting instructions live in
+[`shared/agent.js`](https://github.com/Nexight-ai/oneshotlm.com/blob/main/shared/agent.js)
+as part of the harness system prompt. The verification checklist asks the
+building agent to test its work; it does not add a separate evaluator or rating
+step.
 
 Preserve prompt IDs and frontmatter when revising an existing task. The current
 pipeline generates added model/prompt pairs, so editing prompt text alone does

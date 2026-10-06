@@ -17,5 +17,3 @@ Required behavior:
 - Use locally available fonts and procedural drawing; no external fonts or images. Choose glyphs, brightness, and timing freely.
 
 Verify: Sample the animation at several moments to inspect independently moving columns, brighter leading glyphs, and fading trails. Pause and resume to check that the image freezes and continues, then use Restart and check that old trails are cleared.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

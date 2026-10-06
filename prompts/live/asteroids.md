@@ -16,5 +16,3 @@ Required behavior:
 - Keep projectile lifetime bounded and prevent gameplay keys from scrolling the page.
 
 Verify: Test rotation, thrust, and firing near the initial spawn. Check that the ship changes heading, gains momentum, and emits moving projectiles. Sample the scene to inspect screen wrapping when an object crosses an edge.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

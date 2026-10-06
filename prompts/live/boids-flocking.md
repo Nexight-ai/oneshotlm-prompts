@@ -16,5 +16,3 @@ Required behavior:
 - Fit the canvas to the viewport and keep the population and controls usable after resizing.
 
 Verify: Sample the flock at several moments to check coordinated movement and triangles pointing along their travel direction. Try the cursor interaction with available pointer actions, then pause and resume to check that the flock freezes and continues.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

@@ -17,5 +17,3 @@ Required behavior:
 - Generate materials and geometry procedurally. Only core global THREE is available; do not import additional controls or texture files.
 
 Verify: Inspect the initial planet labels and sample orbital motion. Orbit the camera and check that the system stays visible. Pause the simulation while adjusting the camera, then use Reset view and compare the initial framing.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

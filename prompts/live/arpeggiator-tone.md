@@ -17,5 +17,3 @@ Required behavior:
 - Synthesize every sound; do not load audio files.
 
 Verify: Click a pad and check its active feedback. Start the arpeggiator, change one selected note and the tempo, and check that the visible sequence responds. Stop playback and inspect the console for audio-initialization or scheduling errors.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.

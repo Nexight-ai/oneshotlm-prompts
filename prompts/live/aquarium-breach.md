@@ -17,5 +17,3 @@ Required behavior:
 - Simplified, internally consistent physics is sufficient; a full computational-fluid-dynamics solver is not required.
 
 Verify: Position the crack, trigger a breach, and sample the early outflow. Check that the jet curves downward, the waterline begins to fall, and nearby objects respond to the current. Use Reset and check that the tank returns to its intact initial state.
-
-Run the application in the browser and inspect the initial output and console. Use the available browser tools for a brief pass through the representative checks above, focused on readily accessible behavior and the remaining time budget. Fix clear problems you discover and recheck the affected behavior. Save the final file, then briefly report what you actually checked and which behaviors remain unverified. Prioritize the required functionality; visual styling and unspecified implementation details are your choice.
