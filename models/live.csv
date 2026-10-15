@@ -157,3 +157,7 @@ openai/gpt-5.6-terra,OpenAI
 google/gemini-3.1-pro-preview,Google
 x-ai/grok-4.7,xAI · Grok
 qwen/qwen3.8-max-0902,Qwen
+inclusionai/ling-3.1-flash,InclusionAI
+liquid/lfm-2.5-24b-a2b,Liquid AI
+google/gemini-4-argon,Google
+meta/muse-wonder,Meta
