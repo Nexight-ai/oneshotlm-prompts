@@ -91,7 +91,9 @@ Run the `trigger-generation` GitHub Action manually with `before` and `after`
 set to the same exact source commit, plus `refresh_model`, `prompt_id`, and an
 explicit 32-character lowercase hex `attempt_id`. All three refresh inputs are
 required together, so a missing prompt cannot accidentally regenerate a model's
-whole prompt set. This performs paid generation using the deployed Worker's
+whole prompt set. Set `announce` to `false` for a maintenance rerun that should
+publish without a What's New post; leave it blank otherwise. Any other value is
+rejected. This performs paid generation using the deployed Worker's
 OpenRouter key and opens the pipeline's artifact PR; it does not merge that PR.
 
 The Action uses the existing `PIPELINE_URL` variable and `ORCH_TRIGGER_SECRET`

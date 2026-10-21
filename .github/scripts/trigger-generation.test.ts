@@ -23,6 +23,26 @@ test("normal push still submits only before/after", () => {
   assert.deepEqual(buildAdmission({ BEFORE: source, AFTER: "b".repeat(40) }), { before: source, after: "b".repeat(40) });
 });
 
+test("only an explicit false opts out of the What's New post, as the last admission field", () => {
+  const quiet = buildAdmission({ ...env, ANNOUNCE: "false" });
+  assert.deepEqual(quiet, { ...buildAdmission(env), announce: false });
+  // The Worker rebuilds its input in this order before hashing the admission ID.
+  assert.deepEqual(Object.keys(quiet), ["before", "after", "refresh", "attempt", "prompts", "announce"]);
+  assert.notEqual(createHash("sha256").update(JSON.stringify(quiet)).digest("hex").slice(0, 40), id);
+  assert.equal("announce" in buildAdmission({ ...env, ANNOUNCE: "" }), false);
+  for (const value of ["true", "False", "0", "no", " false"]) assert.throws(() => buildAdmission({ ...env, ANNOUNCE: value }), /announce/);
+  assert.deepEqual(buildAdmission({ BEFORE: source, AFTER: "b".repeat(40), ANNOUNCE: "false" }), { before: source, after: "b".repeat(40), announce: false });
+});
+
+test("a quiet dispatch sends announce: false on every delivery", async () => {
+  const calls = [];
+  await run({ ...env, ANNOUNCE: "false" }, { sleep: async () => {}, log: () => {}, request: async (url, options) => {
+    calls.push(options);
+    return ok(options.method === "POST" ? { id } : { status: "complete" });
+  } });
+  assert.equal(JSON.parse(calls[0].body).announce, false);
+});
+
 test("lost admission response redelivers identical input then observes completion without another POST", async () => {
   const calls = [], logs = [];
   const result = await run(env, { sleep: async () => {}, log: value => logs.push(value), request: async (url, options) => {
