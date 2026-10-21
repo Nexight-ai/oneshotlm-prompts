@@ -11,18 +11,33 @@ on:
       after:
         description: Source revision after the additions (defaults to selected ref)
         required: false
+      refresh_model:
+        description: Optional single live model to regenerate (requires prompt_id and attempt_id)
+        required: false
+      prompt_id:
+        description: Single live prompt ID for the refresh
+        required: false
+      attempt_id:
+        description: Explicit 32-character lowercase hex ID; reuse for delivery retries
+        required: false
 jobs:
   trigger:
     runs-on: ubuntu-latest
+    timeout-minutes: 50
     permissions: { contents: read }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 24 }
+      - name: Validate trigger behavior
+        run: node --test .github/scripts/trigger-generation.test.ts
       - name: Submit immutable source change
         env:
           PIPELINE_URL: ${{ vars.PIPELINE_URL }}
           TRIGGER_SECRET: ${{ secrets.ORCH_TRIGGER_SECRET }}
           BEFORE: ${{ inputs.before || github.event.before }}
           AFTER: ${{ inputs.after || github.sha }}
+          REFRESH_MODEL: ${{ inputs.refresh_model }}
+          PROMPT_ID: ${{ inputs.prompt_id }}
+          ATTEMPT_ID: ${{ inputs.attempt_id }}
         run: node .github/scripts/trigger-generation.ts
