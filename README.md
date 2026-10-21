@@ -87,11 +87,13 @@ revision; results from different specifications are not directly equivalent.
 
 ## Run the pipeline manually
 
-The `trigger-generation` GitHub Action dispatches four kinds of runs. Every kind
-except additions requires `before` and `after` to be the same exact source
-commit. None of them selects prompts by how earlier results turned out. Every
-kind except diagnostic performs paid generation with the deployed Worker's
-OpenRouter key and opens an artifact PR; the Action never merges it.
+The `trigger-generation` GitHub Action dispatches four kinds of runs. Every
+kind, diagnostic included, performs paid model generation with the deployed
+Worker's OpenRouter key. All kinds except diagnostic open an artifact PR (the
+Action never merges it); a diagnostic opens no PR and publishes nothing. Full
+refreshes and diagnostics require `before` and `after` to be the same exact
+source commit; a recovery uses its parent's `before` and `after` unchanged. None
+of them selects prompts by how earlier results turned out.
 
 - **Additions** (also what a push sends): `before` and `after` only. Runs the
   pairs the source change added, and nothing else.
