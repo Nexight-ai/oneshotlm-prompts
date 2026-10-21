@@ -1,16 +1,20 @@
 import { pathToFileURL } from "node:url";
 
 export function buildAdmission(env) {
-  const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt } = env;
+  const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt, ANNOUNCE: announce } = env;
   if (![before, after].every(value => /^[a-f0-9]{40}$/.test(value || "") && !/^0+$/.test(value))) throw Error("Invalid source revisions");
+  // Only an explicit "false" opts out of the What's New post; blank keeps the default. It is the last
+  // field, matching the order the Worker hashes into the admission ID.
+  if (announce && announce !== "false") throw Error("announce may only be false or blank");
+  const quiet = announce === "false" ? { announce: false } : {};
   if (model || prompt || attempt) {
     if (!model || !prompt || !/^[a-f0-9]{32}$/.test(attempt || "")) throw Error("Single-pair refresh requires model, prompt and a 32-character hex attempt ID");
     if (!/^[\w.-]+\/[\w.:-]+$/.test(model) || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(prompt)) throw Error("Invalid model or prompt ID");
     if (before !== after) throw Error("Single-pair refresh requires identical before/after source revisions");
-    return { before, after, refresh: [model], attempt, prompts: { [model]: [prompt] } };
+    return { before, after, refresh: [model], attempt, prompts: { [model]: [prompt] }, ...quiet };
   }
   if (before === after) throw Error("Additions require different source revisions");
-  return { before, after };
+  return { before, after, ...quiet };
 }
 
 export async function run(env, { request = fetch, sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), log = console.log } = {}) {

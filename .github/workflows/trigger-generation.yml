@@ -20,6 +20,9 @@ on:
       attempt_id:
         description: Explicit 32-character lowercase hex ID; reuse for delivery retries
         required: false
+      announce:
+        description: Leave blank for the default; set to false to publish without a What's New post
+        required: false
 jobs:
   trigger:
     runs-on: ubuntu-latest
@@ -40,4 +43,5 @@ jobs:
           REFRESH_MODEL: ${{ inputs.refresh_model }}
           PROMPT_ID: ${{ inputs.prompt_id }}
           ATTEMPT_ID: ${{ inputs.attempt_id }}
+          ANNOUNCE: ${{ inputs.announce }}
         run: node .github/scripts/trigger-generation.ts
