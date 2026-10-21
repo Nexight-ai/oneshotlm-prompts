@@ -12,16 +12,22 @@ on:
         description: Source revision after the additions (defaults to selected ref)
         required: false
       refresh_model:
-        description: Optional single live model to regenerate (requires prompt_id and attempt_id)
+        description: Optional live model to refresh on all live prompts (requires attempt_id; before = after)
         required: false
       prompt_id:
-        description: Single live prompt ID for the refresh
+        description: Diagnostic only - a single live prompt for a diagnostic run (never published)
         required: false
       attempt_id:
         description: Explicit 32-character lowercase hex ID; reuse for delivery retries
         required: false
       announce:
         description: Leave blank for the default; set to false to publish without a What's New post
+        required: false
+      retry_of:
+        description: Recovery - parent batch ID; reruns only its recorded external failures (repeat the parent's other inputs)
+        required: false
+      diagnostic:
+        description: Set to true for a diagnostic run (saved, never published; requires refresh_model and attempt_id)
         required: false
 jobs:
   trigger:
@@ -44,4 +50,6 @@ jobs:
           PROMPT_ID: ${{ inputs.prompt_id }}
           ATTEMPT_ID: ${{ inputs.attempt_id }}
           ANNOUNCE: ${{ inputs.announce }}
+          RETRY_OF: ${{ inputs.retry_of }}
+          DIAGNOSTIC: ${{ inputs.diagnostic }}
         run: node .github/scripts/trigger-generation.ts

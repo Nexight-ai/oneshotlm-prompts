@@ -85,23 +85,43 @@ their pinned source commit. Compare runs using their actual prompt and source
 revision; results from different specifications are not directly equivalent.
 
 
-## Run a single-pair pipeline check
+## Run the pipeline manually
 
-Run the `trigger-generation` GitHub Action manually with `before` and `after`
-set to the same exact source commit, plus `refresh_model`, `prompt_id`, and an
-explicit 32-character lowercase hex `attempt_id`. All three refresh inputs are
-required together, so a missing prompt cannot accidentally regenerate a model's
-whole prompt set. Set `announce` to `false` for a maintenance rerun that should
-publish without a What's New post; leave it blank otherwise. Any other value is
-rejected. This performs paid generation using the deployed Worker's
-OpenRouter key and opens the pipeline's artifact PR; it does not merge that PR.
+The `trigger-generation` GitHub Action dispatches four kinds of runs. Every kind
+except additions requires `before` and `after` to be the same exact source
+commit. None of them selects prompts by how earlier results turned out. Every
+kind except diagnostic performs paid generation with the deployed Worker's
+OpenRouter key and opens an artifact PR; the Action never merges it.
+
+- **Additions** (also what a push sends): `before` and `after` only. Runs the
+  pairs the source change added, and nothing else.
+- **Full refresh of a model:** `refresh_model` plus an explicit 32-character
+  lowercase hex `attempt_id`. The model runs every live prompt. Every result is
+  published as recorded, failures included, except sessions stopped by an
+  external failure, which are withheld for recovery.
+- **Recovery of external failures:** `retry_of` set to the parent batch ID (the
+  Workflow ID of the run being recovered), plus that run's own inputs repeated
+  exactly (`before`, `after`, and `refresh_model`, `attempt_id` and `announce`
+  when it had them). Reruns only the pairs the parent recorded as stopped by
+  credits, rate limits, a provider or a harness limit, and publishes only those.
+  A parent is recovered once; recover later external failures from that
+  recovery's batch ID. Batches created before oneshotlm.com PR #136 lack the records this
+  needs and are refused.
+- **Diagnostic:** `diagnostic` = `true` with `refresh_model` and `attempt_id`,
+  optionally `prompt_id` for a single prompt. The pipeline saves the outcome
+  and opens no PR; nothing is published. `prompt_id` is accepted only here.
+  `announce` and `retry_of` cannot be combined with it.
+
+Set `announce` to `false` for a published run that should not get a What's New
+post; leave it blank otherwise. Any other value is rejected. A diagnostic is
+not the same as `announce: false`: that only skips the post.
 
 The Action uses the existing `PIPELINE_URL` variable and `ORCH_TRIGGER_SECRET`
-secret. It observes the run through authenticated `GET /runs/<id>` and reports
-terminal failures. Reuse all inputs, including the same attempt ID, for delivery
-retries. A new attempt ID authorizes another paid generation. If observation
-times out or the Action is cancelled, the Cloudflare execution may continue;
-inspect that execution before deciding to retry.
+secret. It observes refreshes, recoveries and diagnostics through authenticated
+`GET /runs/<id>` and reports terminal failures. Reuse all inputs, including the
+same attempt ID, for delivery retries. A new attempt ID authorizes another paid
+generation. If observation times out or the Action is cancelled, the Cloudflare
+execution may continue; inspect that execution before deciding to retry.
 
 ## Layout
 
