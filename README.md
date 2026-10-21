@@ -85,6 +85,22 @@ their pinned source commit. Compare runs using their actual prompt and source
 revision; results from different specifications are not directly equivalent.
 
 
+## Run a single-pair pipeline check
+
+Run the `trigger-generation` GitHub Action manually with `before` and `after`
+set to the same exact source commit, plus `refresh_model`, `prompt_id`, and an
+explicit 32-character lowercase hex `attempt_id`. All three refresh inputs are
+required together, so a missing prompt cannot accidentally regenerate a model's
+whole prompt set. This performs paid generation using the deployed Worker's
+OpenRouter key and opens the pipeline's artifact PR; it does not merge that PR.
+
+The Action uses the existing `PIPELINE_URL` variable and `ORCH_TRIGGER_SECRET`
+secret. It observes the run through authenticated `GET /runs/<id>` and reports
+terminal failures. Reuse all inputs, including the same attempt ID, for delivery
+retries. A new attempt ID authorizes another paid generation. If observation
+times out or the Action is cancelled, the Cloudflare execution may continue;
+inspect that execution before deciding to retry.
+
 ## Layout
 
 ```
