@@ -42,6 +42,20 @@ test("a recovery repeats the parent's inputs and adds retry_of", () => {
   assert.throws(() => buildAdmission({ ...refresh, RETRY_OF: "short" }), /retry_of/);
 });
 
+test("a recovery may opt in to rounds: all three policy inputs, with retry_of, within the Worker's limits; the policy is hashed last", () => {
+  const recovery = { ...refresh, ANNOUNCE: "false", RETRY_OF: "c".repeat(40) };
+  const policy = { RECOVERY_ROUNDS: "3", RECOVERY_MAX_USD: "1.5", RECOVERY_SESSION_USD: "0.1" };
+  const body = buildAdmission({ ...recovery, ...policy });
+  assert.deepEqual(body, { ...buildAdmission(recovery), recoveryPolicy: { rounds: 3, maxUsd: 1.5, sessionUsd: 0.1 } });
+  assert.deepEqual(Object.keys(body), ["before", "after", "refresh", "retryOf", "attempt", "announce", "recoveryPolicy"]);
+  assert.deepEqual(Object.keys(body.recoveryPolicy), ["rounds", "maxUsd", "sessionUsd"]);
+  assert.notEqual(hashOf(body), hashOf(buildAdmission(recovery)), "a policy recovery is its own admission");
+  assert.throws(() => buildAdmission({ ...refresh, ...policy }), /needs retry_of/);
+  for (const partial of [{ RECOVERY_ROUNDS: "2" }, { RECOVERY_MAX_USD: "1", RECOVERY_SESSION_USD: "0.1" }]) assert.throws(() => buildAdmission({ ...recovery, ...partial }), /go together/);
+  for (const bad of [{ RECOVERY_ROUNDS: "4" }, { RECOVERY_ROUNDS: "0" }, { RECOVERY_ROUNDS: "1.5" }, { RECOVERY_MAX_USD: "6" }, { RECOVERY_MAX_USD: "0" }, { RECOVERY_MAX_USD: "1e1" },
+    { RECOVERY_SESSION_USD: "2" }, { RECOVERY_SESSION_USD: "-0.1" }, { RECOVERY_SESSION_USD: " 0.1" }]) assert.throws(() => buildAdmission({ ...recovery, ...policy, ...bad }), /recovery_/);
+});
+
 test("normal push still submits only before/after", () => {
   assert.deepEqual(buildAdmission({ BEFORE: source, AFTER: "b".repeat(40) }), { before: source, after: "b".repeat(40) });
 });

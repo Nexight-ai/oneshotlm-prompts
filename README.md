@@ -119,6 +119,19 @@ of them selects prompts by how earlier results turned out.
   A parent is recovered once; recover later external failures from that
   recovery's batch ID. Batches created before oneshotlm.com PR #136 lack the records this
   needs and are refused.
+  - **Recovery rounds (opt-in for this recovery only):** add all three of
+    `recovery_rounds` (1–3), `recovery_max_usd` (above 0, at most 5) and
+    `recovery_session_usd` (one session's estimated cost, within the budget).
+    The same Workflow then reruns, after a wait (10, then 30 minutes), only the
+    pairs still stopped by a provider or rate limit; the first result that is not
+    an external stop is adopted and never rerun. It accepts only parents whose
+    stops are provider or rate-limit ones (credits need a top-up and harness
+    limits a fix first). **The budget is an estimate checked before each round
+    starts, not a hard cap:** running sessions are never cut short. The PR lists
+    every attempt and why rounds stopped. Rounds take longer than the Action's
+    observation (about 45 minutes), so the Action may end with "may still be
+    running" while the Workflow continues; follow it with the pipeline's
+    `GET /recoveries/<id>` or the Workflow status instead of dispatching again.
 - **Diagnostic:** `diagnostic` = `true` with `refresh_model` and `attempt_id`,
   optionally `prompt_id` for a single prompt. The pipeline saves the outcome
   and opens no PR; nothing is published. `prompt_id` is accepted only here.
