@@ -7,8 +7,12 @@ import { pathToFileURL } from "node:url";
 //   failures and publishes only those
 // - diagnostic: diagnostic=true + refresh_model + attempt_id (+ optional prompt_id); saved by the
 //   pipeline, never published. A prompt selection is accepted only here.
+// A recovery may opt in to further rounds for pairs still stopped by a provider or rate limit:
+// recovery_rounds + recovery_max_usd + recovery_session_usd, all three or none (the Worker enforces
+// the same limits; the budget is an estimate checked before each round, not a hard cap).
 export function buildAdmission(env) {
-  const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt, ANNOUNCE: announce, RETRY_OF: retryOf, DIAGNOSTIC: diagnostic } = env;
+  const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt, ANNOUNCE: announce, RETRY_OF: retryOf, DIAGNOSTIC: diagnostic,
+    RECOVERY_ROUNDS: rounds, RECOVERY_MAX_USD: maxUsd, RECOVERY_SESSION_USD: sessionUsd } = env;
   if (![before, after].every(value => /^[a-f0-9]{40}$/.test(value || "") && !/^0+$/.test(value))) throw Error("Invalid source revisions");
   // Only an explicit "false" opts out of the What's New post; blank keeps the default.
   if (announce && announce !== "false") throw Error("announce may only be false or blank");
@@ -22,8 +26,19 @@ export function buildAdmission(env) {
   if (!model && attempt) throw Error("attempt_id requires refresh_model");
   if (model && before !== after) throw Error("A refresh requires identical before/after source revisions");
   if (!model && before === after) throw Error("Additions require different source revisions");
+  const policy = [rounds, maxUsd, sessionUsd];
+  if (policy.some(Boolean) && !policy.every(Boolean)) throw Error("recovery_rounds, recovery_max_usd and recovery_session_usd go together");
+  let recoveryPolicy;
+  if (rounds) {
+    if (!retryOf) throw Error("A recovery policy needs retry_of");
+    const usd = value => /^(0|[1-9]\d*)(\.\d{1,4})?$/.test(value) ? Number(value) : NaN;
+    recoveryPolicy = { rounds: /^[1-3]$/.test(rounds) ? Number(rounds) : NaN, maxUsd: usd(maxUsd), sessionUsd: usd(sessionUsd) };
+    if (!Number.isInteger(recoveryPolicy.rounds)) throw Error("recovery_rounds must be 1, 2 or 3");
+    if (!(recoveryPolicy.maxUsd > 0 && recoveryPolicy.maxUsd <= 5)) throw Error("recovery_max_usd must be above 0 and at most 5");
+    if (!(recoveryPolicy.sessionUsd > 0 && recoveryPolicy.sessionUsd <= recoveryPolicy.maxUsd)) throw Error("recovery_session_usd must be above 0 and within recovery_max_usd");
+  }
   return { before, after, ...(model ? { refresh: [model] } : {}), ...(retryOf ? { retryOf } : {}), ...(attempt ? { attempt } : {}),
-    ...(prompt ? { prompts: { [model]: [prompt] } } : {}), ...(announce === "false" ? { announce: false } : {}), ...(diagnostic ? { diagnostic: true } : {}) };
+    ...(prompt ? { prompts: { [model]: [prompt] } } : {}), ...(announce === "false" ? { announce: false } : {}), ...(diagnostic ? { diagnostic: true } : {}), ...(recoveryPolicy ? { recoveryPolicy } : {}) };
 }
 
 export async function run(env, { request = fetch, sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), log = console.log } = {}) {
