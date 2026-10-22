@@ -18,6 +18,16 @@ mistralai/mistral-large-3,Mistral AI
 - **`vendor`** (optional) — display group label (e.g. `Mistral AI`). Leave blank to derive it from the id prefix.
 
 Maintainers move rows from `backlog.csv` to `live.csv` once a model is queued to run.
+`live.csv` has a third, required column, `openrouter_created`: the UTC day
+(`YYYY-MM-DD`) OpenRouter lists the model as created — the `created` timestamp of
+the model in `https://openrouter.ai/api/v1/models`. The site lists models by
+completed outputs, newest on OpenRouter first among equals, so a missing or
+malformed date fails the config build instead of misplacing the model:
+
+```csv
+openrouter_id,vendor,openrouter_created
+mistralai/mistral-large-3,Mistral AI,2026-05-12
+```
 
 ## Add a prompt
 
