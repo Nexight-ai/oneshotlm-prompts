@@ -1,3 +1,12 @@
+function researchAdmission(env) {
+ const {BEFORE:before,AFTER:after,REFRESH_MODEL:models,PROMPT_ID:prompt,ATTEMPT_ID:attempt,DIAGNOSTIC:diagnostic}=env;
+ const refresh=models.split(',');
+ const allowed=['anthropic/claude-haiku-5.5','deepseek/deepseek-v4.1-flash','google/gemini-4-argon'];
+ const tasks=['csv-inspector','contact-manager','game-2048','force-graph-d3','reaction-diffusion','snake-game','maze-generator','matrix-rain'];
+ if(before!=="e1357bb8f80a21278767dc6c2eb3ef1a28697a98"||after!==before||diagnostic!=='true'||env.ANNOUNCE||env.RETRY_OF)throw Error('Research diagnostic only, pinned source, no publication or recovery');
+ if(refresh.length!==3||new Set(refresh).size!==3||refresh.some(m=>!allowed.includes(m))||!tasks.includes(prompt)||!/^[a-f0-9]{32}$/.test(attempt))throw Error('Only the fixed three-model task group');
+ return {before,after,refresh,attempt,prompts:Object.fromEntries(refresh.map(m=>[m,[prompt]])),diagnostic:true};
+}
 import { pathToFileURL } from "node:url";
 
 // Four kinds of dispatch, matching the Worker's admission (fields in the order it hashes them):
@@ -11,6 +20,7 @@ import { pathToFileURL } from "node:url";
 // recovery_rounds + recovery_max_usd + recovery_session_usd, all three or none (the Worker enforces
 // the same limits; the budget is an estimate checked before each round, not a hard cap).
 export function buildAdmission(env) {
+  if (env.REFRESH_MODEL?.includes(",")) return researchAdmission(env);
   const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt, ANNOUNCE: announce, RETRY_OF: retryOf, DIAGNOSTIC: diagnostic,
     RECOVERY_ROUNDS: rounds, RECOVERY_MAX_USD: maxUsd, RECOVERY_SESSION_USD: sessionUsd } = env;
   if (![before, after].every(value => /^[a-f0-9]{40}$/.test(value || "") && !/^0+$/.test(value))) throw Error("Invalid source revisions");
