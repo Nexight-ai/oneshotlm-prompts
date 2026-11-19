@@ -1,4 +1,6 @@
 openrouter_id,vendor,openrouter_created
+openai/gpt-6.2-astra,OpenAI,2026-11-17
+openai/gpt-6.2-sol,OpenAI,2026-11-17
 deepseek/deepseek-v4-flash,DeepSeek,2026-04-24
 xiaomi/mimo-v2.5,Xiaomi · MiMo,2026-04-22
 minimax/minimax-m3,MiniMax,2026-05-31
