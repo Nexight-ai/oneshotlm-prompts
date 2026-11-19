@@ -12,7 +12,8 @@ import { pathToFileURL } from "node:url";
 // the same limits; the budget is an estimate checked before each round, not a hard cap).
 export function buildAdmission(env) {
   const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt, ANNOUNCE: announce, RETRY_OF: retryOf, DIAGNOSTIC: diagnostic,
-    RECOVERY_ROUNDS: rounds, RECOVERY_MAX_USD: maxUsd, RECOVERY_SESSION_USD: sessionUsd } = env;
+    RECOVERY_ROUNDS: rounds, RECOVERY_MAX_USD: maxUsd, RECOVERY_SESSION_USD: sessionUsd,
+    RECOVERY_MODEL: recoveryModel, RECOVERY_LIMIT: recoveryLimit, RECOVERY_CONCURRENCY: recoveryConcurrency } = env;
   if (![before, after].every(value => /^[a-f0-9]{40}$/.test(value || "") && !/^0+$/.test(value))) throw Error("Invalid source revisions");
   // Only an explicit "false" opts out of the What's New post; blank keeps the default.
   if (announce && announce !== "false") throw Error("announce may only be false or blank");
@@ -37,8 +38,15 @@ export function buildAdmission(env) {
     if (!(recoveryPolicy.maxUsd > 0 && recoveryPolicy.maxUsd <= 5)) throw Error("recovery_max_usd must be above 0 and at most 5");
     if (!(recoveryPolicy.sessionUsd > 0 && recoveryPolicy.sessionUsd <= recoveryPolicy.maxUsd)) throw Error("recovery_session_usd must be above 0 and within recovery_max_usd");
   }
+  const selection = [recoveryModel, recoveryLimit, recoveryConcurrency];
+  if (selection.some(Boolean) && (!selection.every(Boolean) || !retryOf)) throw Error("recovery_model, recovery_limit and recovery_concurrency require each other and retry_of");
+  let recoverySelection;
+  if (recoveryModel) {
+    if (!/^[\w.-]+\/[\w.:-]+$/.test(recoveryModel) || !/^[1-5]$/.test(recoveryLimit) || !/^[1-5]$/.test(recoveryConcurrency)) throw Error("Invalid recovery selection; limit and concurrency must be 1-5");
+    recoverySelection = { models: [recoveryModel], limit: Number(recoveryLimit), concurrency: Number(recoveryConcurrency) };
+  }
   return { before, after, ...(model ? { refresh: [model] } : {}), ...(retryOf ? { retryOf } : {}), ...(attempt ? { attempt } : {}),
-    ...(prompt ? { prompts: { [model]: [prompt] } } : {}), ...(announce === "false" ? { announce: false } : {}), ...(diagnostic ? { diagnostic: true } : {}), ...(recoveryPolicy ? { recoveryPolicy } : {}) };
+    ...(prompt ? { prompts: { [model]: [prompt] } } : {}), ...(announce === "false" ? { announce: false } : {}), ...(diagnostic ? { diagnostic: true } : {}), ...(recoveryPolicy ? { recoveryPolicy } : {}), ...(recoverySelection ? { recoverySelection } : {}) };
 }
 
 export async function run(env, { request = fetch, sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), log = console.log } = {}) {

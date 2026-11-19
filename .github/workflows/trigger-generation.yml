@@ -38,6 +38,15 @@ on:
       recovery_session_usd:
         description: Recovery rounds - estimated cost of one session (USD), used for the pairs a round would start
         required: false
+      recovery_model:
+        description: Recovery only - restrict to this parent's model (requires recovery_limit and recovery_concurrency)
+        required: false
+      recovery_limit:
+        description: Recovery only - at most 1-5 external stops in this batch, for cost review between batches
+        required: false
+      recovery_concurrency:
+        description: Recovery only - explicit 1-5 concurrent sessions
+        required: false
 jobs:
   trigger:
     runs-on: ubuntu-latest
@@ -64,4 +73,7 @@ jobs:
           RECOVERY_ROUNDS: ${{ inputs.recovery_rounds }}
           RECOVERY_MAX_USD: ${{ inputs.recovery_max_usd }}
           RECOVERY_SESSION_USD: ${{ inputs.recovery_session_usd }}
+          RECOVERY_MODEL: ${{ inputs.recovery_model }}
+          RECOVERY_LIMIT: ${{ inputs.recovery_limit }}
+          RECOVERY_CONCURRENCY: ${{ inputs.recovery_concurrency }}
         run: node .github/scripts/trigger-generation.ts

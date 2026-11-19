@@ -12,6 +12,19 @@ const ok = value => Response.json(value);
 const refresh = { ...env, PROMPT_ID: "" };
 const hashOf = body => createHash("sha256").update(JSON.stringify(body)).digest("hex").slice(0, 40);
 
+test("a bounded model recovery appends explicit scope without changing existing delivery identities", () => {
+  const base = {BEFORE:source,AFTER:"b".repeat(40),RETRY_OF:"c".repeat(40),ANNOUNCE:"false",RECOVERY_ROUNDS:"1",RECOVERY_MAX_USD:"5",RECOVERY_SESSION_USD:"0.3"};
+  const selected = {RECOVERY_MODEL:"openai/gpt-6.2-sol",RECOVERY_LIMIT:"5",RECOVERY_CONCURRENCY:"5"};
+  const old=buildAdmission(base),body=buildAdmission({...base,...selected});
+  assert.deepEqual(body,{...old,recoverySelection:{models:["openai/gpt-6.2-sol"],limit:5,concurrency:5}});
+  assert.equal(Object.keys(body).at(-1),"recoverySelection");
+  assert.deepEqual(Object.keys(body.recoverySelection),["models","limit","concurrency"]);
+  assert.notEqual(hashOf(body),hashOf(old));
+  for(const missing of ["RECOVERY_MODEL","RECOVERY_LIMIT","RECOVERY_CONCURRENCY"])assert.throws(()=>buildAdmission({...base,...selected,[missing]:""}));
+  assert.throws(()=>buildAdmission({...base,...selected,RETRY_OF:""}));
+  for(const n of ["0","6","1.5"," 5"])for(const field of ["RECOVERY_LIMIT","RECOVERY_CONCURRENCY"])assert.throws(()=>buildAdmission({...base,...selected,[field]:n}));
+});
+
 test("a refresh covers every live prompt; a prompt selection is accepted only for a diagnostic run", () => {
   assert.deepEqual(buildAdmission(refresh), { before: source, after: source, refresh: ["openai/gpt-4.1-mini"], attempt: env.ATTEMPT_ID });
   assert.throws(() => buildAdmission(env), /only for diagnostic runs/);
