@@ -38,6 +38,30 @@ on:
       recovery_session_usd:
         description: Recovery rounds - estimated cost of one session (USD), used for the pairs a round would start
         required: false
+      recovery_model:
+        description: Recovery only - restrict to this parent's model (requires recovery_limit and recovery_concurrency)
+        required: false
+      recovery_limit:
+        description: Recovery only - at most 1-5 external stops in this batch, for cost review between batches
+        required: false
+      recovery_concurrency:
+        description: Recovery only - explicit 1-5 concurrent sessions
+        required: false
+      recovery_allow_provider_subset:
+        description: Explicit operator approval only - allow fewer parent providers, preserving all other settings
+        required: false
+      recovery_stopped_containers:
+        description: Inspected container stops only - comma-separated exact run IDs authorizing one fresh paid attempt
+        required: false
+      reconcile_origin:
+        description: Billing only - recheck late billing for this lineage; starts no generation
+        required: false
+      recovery_lineage_origin:
+        description: Explicit budget approval only - exact evaluation origin for this recovery
+        required: false
+      recovery_lineage_max_usd:
+        description: Explicit budget approval only - total retry ceiling USD 5-10 for this recovery, preserving the default policy
+        required: false
 jobs:
   trigger:
     runs-on: ubuntu-latest
@@ -64,4 +88,12 @@ jobs:
           RECOVERY_ROUNDS: ${{ inputs.recovery_rounds }}
           RECOVERY_MAX_USD: ${{ inputs.recovery_max_usd }}
           RECOVERY_SESSION_USD: ${{ inputs.recovery_session_usd }}
+          RECOVERY_MODEL: ${{ inputs.recovery_model }}
+          RECOVERY_LIMIT: ${{ inputs.recovery_limit }}
+          RECOVERY_CONCURRENCY: ${{ inputs.recovery_concurrency }}
+          RECOVERY_ALLOW_PROVIDER_SUBSET: ${{ inputs.recovery_allow_provider_subset }}
+          RECOVERY_STOPPED_CONTAINERS: ${{ inputs.recovery_stopped_containers }}
+          RECONCILE_ORIGIN: ${{ inputs.reconcile_origin }}
+          RECOVERY_LINEAGE_ORIGIN: ${{ inputs.recovery_lineage_origin }}
+          RECOVERY_LINEAGE_MAX_USD: ${{ inputs.recovery_lineage_max_usd }}
         run: node .github/scripts/trigger-generation.ts

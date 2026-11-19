@@ -12,6 +12,38 @@ const ok = value => Response.json(value);
 const refresh = { ...env, PROMPT_ID: "" };
 const hashOf = body => createHash("sha256").update(JSON.stringify(body)).digest("hex").slice(0, 40);
 
+test("billing-only dispatch can never admit a paid session", async () => {
+  const calls=[],billing={PIPELINE_URL:env.PIPELINE_URL,TRIGGER_SECRET:env.TRIGGER_SECRET,RECONCILE_ORIGIN:'c'.repeat(40)};
+  const result=await run(billing,{request:async(url,options)=>{calls.push({url,method:options.method,body:options.body});return ok({updated:['known']});},log:()=>{}});
+  assert.deepEqual(result,{updated:['known']});
+  assert.deepEqual(calls,[{url:`https://pipeline.example/billing/${billing.RECONCILE_ORIGIN}`,method:'POST',body:'null'}]);
+  for(const patch of [{RECONCILE_ORIGIN:'bad'},{RETRY_OF:'c'.repeat(40)},{RECOVERY_MODEL:'openai/gpt-6.2-astra'},{REFRESH_MODEL:'x/m'}])await assert.rejects(()=>run({...billing,...patch}),/Billing-only/);
+});
+
+test("manual budget approval pins the evaluation origin and stays out of default admissions",()=>{
+ const env={BEFORE:source,AFTER:'b'.repeat(40),RETRY_OF:'c'.repeat(40),RECOVERY_MODEL:'openai/gpt-6.2-astra',RECOVERY_LIMIT:'5',RECOVERY_CONCURRENCY:'1',RECOVERY_ROUNDS:'1',RECOVERY_MAX_USD:'5',RECOVERY_SESSION_USD:'0.6'};
+ const extra={RECOVERY_LINEAGE_ORIGIN:'a'.repeat(40),RECOVERY_LINEAGE_MAX_USD:'10'};
+ assert.deepEqual(buildAdmission({...env,...extra}).recoverySelection,{...buildAdmission(env).recoverySelection,lineageBudget:{origin:extra.RECOVERY_LINEAGE_ORIGIN,maxUsd:10}});
+ assert.notEqual(hashOf(buildAdmission({...env,...extra})),hashOf(buildAdmission(env)));
+ for(const patch of [{RECOVERY_LINEAGE_ORIGIN:''},{RECOVERY_LINEAGE_MAX_USD:''},{RECOVERY_LINEAGE_MAX_USD:'11'},{RECOVERY_LINEAGE_MAX_USD:'4'},{RECOVERY_LINEAGE_ORIGIN:'bad'},{RECOVERY_ROUNDS:'2'}])assert.throws(()=>buildAdmission({...env,...extra,...patch}));
+});
+
+test("a bounded model recovery appends explicit scope without changing existing delivery identities", () => {
+  const base = {BEFORE:source,AFTER:"b".repeat(40),RETRY_OF:"c".repeat(40),ANNOUNCE:"false",RECOVERY_ROUNDS:"1",RECOVERY_MAX_USD:"5",RECOVERY_SESSION_USD:"0.3"};
+  const selected = {RECOVERY_MODEL:"openai/gpt-6.2-sol",RECOVERY_LIMIT:"5",RECOVERY_CONCURRENCY:"5"};
+  const old=buildAdmission(base),body=buildAdmission({...base,...selected});
+  assert.deepEqual(body,{...old,recoverySelection:{models:["openai/gpt-6.2-sol"],limit:5,concurrency:5}});
+  assert.equal(Object.keys(body).at(-1),"recoverySelection");
+  assert.deepEqual(Object.keys(body.recoverySelection),["models","limit","concurrency"]);
+  assert.notEqual(hashOf(body),hashOf(old));
+  assert.deepEqual(buildAdmission({...base,...selected,RECOVERY_ALLOW_PROVIDER_SUBSET:"true"}).recoverySelection,{...body.recoverySelection,allowProviderSubset:true});
+  assert.throws(()=>buildAdmission({...base,RECOVERY_ALLOW_PROVIDER_SUBSET:"true"}));
+  assert.throws(()=>buildAdmission({...base,...selected,RECOVERY_ALLOW_PROVIDER_SUBSET:"false"}));
+  for(const missing of ["RECOVERY_MODEL","RECOVERY_LIMIT","RECOVERY_CONCURRENCY"])assert.throws(()=>buildAdmission({...base,...selected,[missing]:""}));
+  assert.throws(()=>buildAdmission({...base,...selected,RETRY_OF:""}));
+  for(const n of ["0","6","1.5"," 5"])for(const field of ["RECOVERY_LIMIT","RECOVERY_CONCURRENCY"])assert.throws(()=>buildAdmission({...base,...selected,[field]:n}));
+});
+
 test("a refresh covers every live prompt; a prompt selection is accepted only for a diagnostic run", () => {
   assert.deepEqual(buildAdmission(refresh), { before: source, after: source, refresh: ["openai/gpt-4.1-mini"], attempt: env.ATTEMPT_ID });
   assert.throws(() => buildAdmission(env), /only for diagnostic runs/);
@@ -19,6 +51,16 @@ test("a refresh covers every live prompt; a prompt selection is accepted only fo
   assert.throws(() => buildAdmission({ ...refresh, AFTER: "b".repeat(40) }), /identical/);
   assert.throws(() => buildAdmission({ ...refresh, ATTEMPT_ID: "new" }));
   assert.throws(() => buildAdmission({ ...refresh, REFRESH_MODEL: "", BEFORE: source, AFTER: "b".repeat(40) }), /attempt_id requires refresh_model/);
+});
+
+test("an inspected container-stop dispatch names exact runs, preserves identity, and requires a single-round budget", () => {
+  const base={BEFORE:source,AFTER:'b'.repeat(40),RETRY_OF:'c'.repeat(40),RECOVERY_MODEL:'openai/gpt-6.2-astra',RECOVERY_LIMIT:'5',RECOVERY_CONCURRENCY:'5',RECOVERY_ROUNDS:'1',RECOVERY_MAX_USD:'5',RECOVERY_SESSION_USD:'0.6'};
+  const plain=buildAdmission(base),input={...base,RECOVERY_STOPPED_CONTAINERS:'fluid-simulation-openai-gpt-6-2-astra,force-graph-d3-openai-gpt-6-2-astra'};
+  const body=buildAdmission(input);
+  assert.deepEqual(body,{...plain,recoverySelection:{...plain.recoverySelection,stoppedContainers:input.RECOVERY_STOPPED_CONTAINERS.split(',')}});
+  assert.equal(hashOf(body),hashOf(buildAdmission(input)));
+  assert.notEqual(hashOf(body),hashOf(plain));
+  for(const patch of [{RECOVERY_ROUNDS:'2'},{RECOVERY_ROUNDS:'',RECOVERY_MAX_USD:'',RECOVERY_SESSION_USD:''},{RECOVERY_MODEL:'',RECOVERY_LIMIT:'',RECOVERY_CONCURRENCY:''},{RECOVERY_STOPPED_CONTAINERS:'bad_id'},{RECOVERY_STOPPED_CONTAINERS:'same,same'}])assert.throws(()=>buildAdmission({...input,...patch}));
 });
 
 test("a diagnostic run keeps the earlier single-pair body plus diagnostic: true, and never announces or retries", () => {
