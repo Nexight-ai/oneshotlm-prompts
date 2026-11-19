@@ -13,7 +13,8 @@ import { pathToFileURL } from "node:url";
 export function buildAdmission(env) {
   const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt, ANNOUNCE: announce, RETRY_OF: retryOf, DIAGNOSTIC: diagnostic,
     RECOVERY_ROUNDS: rounds, RECOVERY_MAX_USD: maxUsd, RECOVERY_SESSION_USD: sessionUsd,
-    RECOVERY_MODEL: recoveryModel, RECOVERY_LIMIT: recoveryLimit, RECOVERY_CONCURRENCY: recoveryConcurrency, RECOVERY_ALLOW_PROVIDER_SUBSET: allowProviderSubset, RECOVERY_STOPPED_CONTAINERS: stoppedContainers } = env;
+    RECOVERY_MODEL: recoveryModel, RECOVERY_LIMIT: recoveryLimit, RECOVERY_CONCURRENCY: recoveryConcurrency, RECOVERY_ALLOW_PROVIDER_SUBSET: allowProviderSubset, RECOVERY_STOPPED_CONTAINERS: stoppedContainers,
+    RECOVERY_LINEAGE_ORIGIN: budgetOrigin, RECOVERY_LINEAGE_MAX_USD: budgetMaxUsd } = env;
   if (![before, after].every(value => /^[a-f0-9]{40}$/.test(value || "") && !/^0+$/.test(value))) throw Error("Invalid source revisions");
   // Only an explicit "false" opts out of the What's New post; blank keeps the default.
   if (announce && announce !== "false") throw Error("announce may only be false or blank");
@@ -52,6 +53,11 @@ export function buildAdmission(env) {
     if (!recoverySelection || recoveryPolicy?.rounds !== 1 || !ids.length || ids.length > recoverySelection.limit || new Set(ids).size !== ids.length || ids.some(id => !/^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/.test(id))) throw Error("recovery_stopped_containers needs inspected run IDs, a selection and a single-round budget");
     recoverySelection.stoppedContainers = ids;
   }
+  if (budgetOrigin || budgetMaxUsd) {
+    const amount = /^(0|[1-9]\d*)(\.\d{1,4})?$/.test(budgetMaxUsd || '') ? Number(budgetMaxUsd) : NaN;
+    if (!recoverySelection || recoveryPolicy?.rounds !== 1 || !/^[a-f0-9]{40}$/.test(budgetOrigin || '') || !(amount >= 5 && amount <= 10)) throw Error("Manual lineage budget needs an origin, USD 5-10 and a single-round recovery selection");
+    recoverySelection.lineageBudget = { origin: budgetOrigin, maxUsd: amount };
+  }
   return { before, after, ...(model ? { refresh: [model] } : {}), ...(retryOf ? { retryOf } : {}), ...(attempt ? { attempt } : {}),
     ...(prompt ? { prompts: { [model]: [prompt] } } : {}), ...(announce === "false" ? { announce: false } : {}), ...(diagnostic ? { diagnostic: true } : {}), ...(recoveryPolicy ? { recoveryPolicy } : {}), ...(recoverySelection ? { recoverySelection } : {}) };
 }
@@ -60,7 +66,7 @@ export async function run(env, { request = fetch, sleep = ms => new Promise(reso
   const { PIPELINE_URL, TRIGGER_SECRET } = env;
   if (!PIPELINE_URL || !TRIGGER_SECRET) throw Error("Missing pipeline configuration");
   const billing = env.RECONCILE_ORIGIN;
-  if (billing && (!/^[a-f0-9]{40}$/.test(billing) || [env.RETRY_OF, env.REFRESH_MODEL, env.ATTEMPT_ID, env.RECOVERY_MODEL, env.DIAGNOSTIC, env.RECOVERY_STOPPED_CONTAINERS].some(Boolean))) throw Error("Billing-only reconciliation needs an origin and cannot request generation");
+  if (billing && (!/^[a-f0-9]{40}$/.test(billing) || [env.RETRY_OF, env.REFRESH_MODEL, env.ATTEMPT_ID, env.RECOVERY_MODEL, env.DIAGNOSTIC, env.RECOVERY_STOPPED_CONTAINERS, env.RECOVERY_LINEAGE_ORIGIN, env.RECOVERY_LINEAGE_MAX_USD].some(Boolean))) throw Error("Billing-only reconciliation needs an origin and cannot request generation");
   const input = billing ? null : buildAdmission(env);
   const base = new URL(PIPELINE_URL);
   if (base.protocol !== "https:" || base.username || base.password || base.search || base.hash) throw Error("Expected HTTPS pipeline URL without credentials, query or fragment");

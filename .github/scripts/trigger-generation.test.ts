@@ -20,6 +20,14 @@ test("billing-only dispatch can never admit a paid session", async () => {
   for(const patch of [{RECONCILE_ORIGIN:'bad'},{RETRY_OF:'c'.repeat(40)},{RECOVERY_MODEL:'openai/gpt-6.2-astra'},{REFRESH_MODEL:'x/m'}])await assert.rejects(()=>run({...billing,...patch}),/Billing-only/);
 });
 
+test("manual budget approval pins the evaluation origin and stays out of default admissions",()=>{
+ const env={BEFORE:source,AFTER:'b'.repeat(40),RETRY_OF:'c'.repeat(40),RECOVERY_MODEL:'openai/gpt-6.2-astra',RECOVERY_LIMIT:'5',RECOVERY_CONCURRENCY:'1',RECOVERY_ROUNDS:'1',RECOVERY_MAX_USD:'5',RECOVERY_SESSION_USD:'0.6'};
+ const extra={RECOVERY_LINEAGE_ORIGIN:'a'.repeat(40),RECOVERY_LINEAGE_MAX_USD:'10'};
+ assert.deepEqual(buildAdmission({...env,...extra}).recoverySelection,{...buildAdmission(env).recoverySelection,lineageBudget:{origin:extra.RECOVERY_LINEAGE_ORIGIN,maxUsd:10}});
+ assert.notEqual(hashOf(buildAdmission({...env,...extra})),hashOf(buildAdmission(env)));
+ for(const patch of [{RECOVERY_LINEAGE_ORIGIN:''},{RECOVERY_LINEAGE_MAX_USD:''},{RECOVERY_LINEAGE_MAX_USD:'11'},{RECOVERY_LINEAGE_MAX_USD:'4'},{RECOVERY_LINEAGE_ORIGIN:'bad'},{RECOVERY_ROUNDS:'2'}])assert.throws(()=>buildAdmission({...env,...extra,...patch}));
+});
+
 test("a bounded model recovery appends explicit scope without changing existing delivery identities", () => {
   const base = {BEFORE:source,AFTER:"b".repeat(40),RETRY_OF:"c".repeat(40),ANNOUNCE:"false",RECOVERY_ROUNDS:"1",RECOVERY_MAX_USD:"5",RECOVERY_SESSION_USD:"0.3"};
   const selected = {RECOVERY_MODEL:"openai/gpt-6.2-sol",RECOVERY_LIMIT:"5",RECOVERY_CONCURRENCY:"5"};
