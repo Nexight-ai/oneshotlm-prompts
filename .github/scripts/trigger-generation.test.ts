@@ -20,6 +20,9 @@ test("a bounded model recovery appends explicit scope without changing existing 
   assert.equal(Object.keys(body).at(-1),"recoverySelection");
   assert.deepEqual(Object.keys(body.recoverySelection),["models","limit","concurrency"]);
   assert.notEqual(hashOf(body),hashOf(old));
+  assert.deepEqual(buildAdmission({...base,...selected,RECOVERY_ALLOW_PROVIDER_SUBSET:"true"}).recoverySelection,{...body.recoverySelection,allowProviderSubset:true});
+  assert.throws(()=>buildAdmission({...base,RECOVERY_ALLOW_PROVIDER_SUBSET:"true"}));
+  assert.throws(()=>buildAdmission({...base,...selected,RECOVERY_ALLOW_PROVIDER_SUBSET:"false"}));
   for(const missing of ["RECOVERY_MODEL","RECOVERY_LIMIT","RECOVERY_CONCURRENCY"])assert.throws(()=>buildAdmission({...base,...selected,[missing]:""}));
   assert.throws(()=>buildAdmission({...base,...selected,RETRY_OF:""}));
   for(const n of ["0","6","1.5"," 5"])for(const field of ["RECOVERY_LIMIT","RECOVERY_CONCURRENCY"])assert.throws(()=>buildAdmission({...base,...selected,[field]:n}));

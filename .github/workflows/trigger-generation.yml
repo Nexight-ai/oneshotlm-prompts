@@ -47,6 +47,9 @@ on:
       recovery_concurrency:
         description: Recovery only - explicit 1-5 concurrent sessions
         required: false
+      recovery_allow_provider_subset:
+        description: Explicit operator approval only - allow fewer parent providers, preserving all other settings
+        required: false
 jobs:
   trigger:
     runs-on: ubuntu-latest
@@ -76,4 +79,5 @@ jobs:
           RECOVERY_MODEL: ${{ inputs.recovery_model }}
           RECOVERY_LIMIT: ${{ inputs.recovery_limit }}
           RECOVERY_CONCURRENCY: ${{ inputs.recovery_concurrency }}
+          RECOVERY_ALLOW_PROVIDER_SUBSET: ${{ inputs.recovery_allow_provider_subset }}
         run: node .github/scripts/trigger-generation.ts
