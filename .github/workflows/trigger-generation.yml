@@ -53,6 +53,9 @@ on:
       recovery_stopped_containers:
         description: Inspected container stops only - comma-separated exact run IDs authorizing one fresh paid attempt
         required: false
+      reconcile_origin:
+        description: Billing only - recheck late billing for this lineage; starts no generation
+        required: false
 jobs:
   trigger:
     runs-on: ubuntu-latest
@@ -84,4 +87,5 @@ jobs:
           RECOVERY_CONCURRENCY: ${{ inputs.recovery_concurrency }}
           RECOVERY_ALLOW_PROVIDER_SUBSET: ${{ inputs.recovery_allow_provider_subset }}
           RECOVERY_STOPPED_CONTAINERS: ${{ inputs.recovery_stopped_containers }}
+          RECONCILE_ORIGIN: ${{ inputs.reconcile_origin }}
         run: node .github/scripts/trigger-generation.ts

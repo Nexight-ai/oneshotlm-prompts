@@ -12,6 +12,14 @@ const ok = value => Response.json(value);
 const refresh = { ...env, PROMPT_ID: "" };
 const hashOf = body => createHash("sha256").update(JSON.stringify(body)).digest("hex").slice(0, 40);
 
+test("billing-only dispatch can never admit a paid session", async () => {
+  const calls=[],billing={PIPELINE_URL:env.PIPELINE_URL,TRIGGER_SECRET:env.TRIGGER_SECRET,RECONCILE_ORIGIN:'c'.repeat(40)};
+  const result=await run(billing,{request:async(url,options)=>{calls.push({url,method:options.method,body:options.body});return ok({updated:['known']});},log:()=>{}});
+  assert.deepEqual(result,{updated:['known']});
+  assert.deepEqual(calls,[{url:`https://pipeline.example/billing/${billing.RECONCILE_ORIGIN}`,method:'POST',body:'null'}]);
+  for(const patch of [{RECONCILE_ORIGIN:'bad'},{RETRY_OF:'c'.repeat(40)},{RECOVERY_MODEL:'openai/gpt-6.2-astra'},{REFRESH_MODEL:'x/m'}])await assert.rejects(()=>run({...billing,...patch}),/Billing-only/);
+});
+
 test("a bounded model recovery appends explicit scope without changing existing delivery identities", () => {
   const base = {BEFORE:source,AFTER:"b".repeat(40),RETRY_OF:"c".repeat(40),ANNOUNCE:"false",RECOVERY_ROUNDS:"1",RECOVERY_MAX_USD:"5",RECOVERY_SESSION_USD:"0.3"};
   const selected = {RECOVERY_MODEL:"openai/gpt-6.2-sol",RECOVERY_LIMIT:"5",RECOVERY_CONCURRENCY:"5"};

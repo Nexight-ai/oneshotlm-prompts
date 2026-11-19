@@ -59,7 +59,9 @@ export function buildAdmission(env) {
 export async function run(env, { request = fetch, sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), log = console.log } = {}) {
   const { PIPELINE_URL, TRIGGER_SECRET } = env;
   if (!PIPELINE_URL || !TRIGGER_SECRET) throw Error("Missing pipeline configuration");
-  const input = buildAdmission(env);
+  const billing = env.RECONCILE_ORIGIN;
+  if (billing && (!/^[a-f0-9]{40}$/.test(billing) || [env.RETRY_OF, env.REFRESH_MODEL, env.ATTEMPT_ID, env.RECOVERY_MODEL, env.DIAGNOSTIC, env.RECOVERY_STOPPED_CONTAINERS].some(Boolean))) throw Error("Billing-only reconciliation needs an origin and cannot request generation");
+  const input = billing ? null : buildAdmission(env);
   const base = new URL(PIPELINE_URL);
   if (base.protocol !== "https:" || base.username || base.password || base.search || base.hash) throw Error("Expected HTTPS pipeline URL without credentials, query or fragment");
   const url = base.href.replace(/\/$/, "");
@@ -80,6 +82,11 @@ export async function run(env, { request = fetch, sleep = ms => new Promise(reso
       }
       await sleep(5000 * (attempt + 1));
     }
+  }
+  if (billing) {
+    const result = await call(`/billing/${billing}`, "POST");
+    log(JSON.stringify(result));
+    return result;
   }
   const admission = await call("/run", "POST");
   if (!/^[a-f0-9]{40}$/.test(admission?.id || "")) throw Error("Invalid admission response");
