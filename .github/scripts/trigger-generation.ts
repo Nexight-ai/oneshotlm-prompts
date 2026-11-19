@@ -13,7 +13,7 @@ import { pathToFileURL } from "node:url";
 export function buildAdmission(env) {
   const { BEFORE: before, AFTER: after, REFRESH_MODEL: model, PROMPT_ID: prompt, ATTEMPT_ID: attempt, ANNOUNCE: announce, RETRY_OF: retryOf, DIAGNOSTIC: diagnostic,
     RECOVERY_ROUNDS: rounds, RECOVERY_MAX_USD: maxUsd, RECOVERY_SESSION_USD: sessionUsd,
-    RECOVERY_MODEL: recoveryModel, RECOVERY_LIMIT: recoveryLimit, RECOVERY_CONCURRENCY: recoveryConcurrency, RECOVERY_ALLOW_PROVIDER_SUBSET: allowProviderSubset } = env;
+    RECOVERY_MODEL: recoveryModel, RECOVERY_LIMIT: recoveryLimit, RECOVERY_CONCURRENCY: recoveryConcurrency, RECOVERY_ALLOW_PROVIDER_SUBSET: allowProviderSubset, RECOVERY_STOPPED_CONTAINERS: stoppedContainers } = env;
   if (![before, after].every(value => /^[a-f0-9]{40}$/.test(value || "") && !/^0+$/.test(value))) throw Error("Invalid source revisions");
   // Only an explicit "false" opts out of the What's New post; blank keeps the default.
   if (announce && announce !== "false") throw Error("announce may only be false or blank");
@@ -47,6 +47,11 @@ export function buildAdmission(env) {
   }
   if (allowProviderSubset && (allowProviderSubset !== "true" || !recoverySelection)) throw Error("recovery_allow_provider_subset requires an explicit recovery selection and true");
   if (allowProviderSubset) recoverySelection.allowProviderSubset = true;
+  if (stoppedContainers) {
+    const ids = stoppedContainers.split(',');
+    if (!recoverySelection || recoveryPolicy?.rounds !== 1 || !ids.length || ids.length > recoverySelection.limit || new Set(ids).size !== ids.length || ids.some(id => !/^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/.test(id))) throw Error("recovery_stopped_containers needs inspected run IDs, a selection and a single-round budget");
+    recoverySelection.stoppedContainers = ids;
+  }
   return { before, after, ...(model ? { refresh: [model] } : {}), ...(retryOf ? { retryOf } : {}), ...(attempt ? { attempt } : {}),
     ...(prompt ? { prompts: { [model]: [prompt] } } : {}), ...(announce === "false" ? { announce: false } : {}), ...(diagnostic ? { diagnostic: true } : {}), ...(recoveryPolicy ? { recoveryPolicy } : {}), ...(recoverySelection ? { recoverySelection } : {}) };
 }

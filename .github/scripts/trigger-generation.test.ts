@@ -37,6 +37,16 @@ test("a refresh covers every live prompt; a prompt selection is accepted only fo
   assert.throws(() => buildAdmission({ ...refresh, REFRESH_MODEL: "", BEFORE: source, AFTER: "b".repeat(40) }), /attempt_id requires refresh_model/);
 });
 
+test("an inspected container-stop dispatch names exact runs, preserves identity, and requires a single-round budget", () => {
+  const base={BEFORE:source,AFTER:'b'.repeat(40),RETRY_OF:'c'.repeat(40),RECOVERY_MODEL:'openai/gpt-6.2-astra',RECOVERY_LIMIT:'5',RECOVERY_CONCURRENCY:'5',RECOVERY_ROUNDS:'1',RECOVERY_MAX_USD:'5',RECOVERY_SESSION_USD:'0.6'};
+  const plain=buildAdmission(base),input={...base,RECOVERY_STOPPED_CONTAINERS:'fluid-simulation-openai-gpt-6-2-astra,force-graph-d3-openai-gpt-6-2-astra'};
+  const body=buildAdmission(input);
+  assert.deepEqual(body,{...plain,recoverySelection:{...plain.recoverySelection,stoppedContainers:input.RECOVERY_STOPPED_CONTAINERS.split(',')}});
+  assert.equal(hashOf(body),hashOf(buildAdmission(input)));
+  assert.notEqual(hashOf(body),hashOf(plain));
+  for(const patch of [{RECOVERY_ROUNDS:'2'},{RECOVERY_ROUNDS:'',RECOVERY_MAX_USD:'',RECOVERY_SESSION_USD:''},{RECOVERY_MODEL:'',RECOVERY_LIMIT:'',RECOVERY_CONCURRENCY:''},{RECOVERY_STOPPED_CONTAINERS:'bad_id'},{RECOVERY_STOPPED_CONTAINERS:'same,same'}])assert.throws(()=>buildAdmission({...input,...patch}));
+});
+
 test("a diagnostic run keeps the earlier single-pair body plus diagnostic: true, and never announces or retries", () => {
   const body = buildAdmission({ ...env, DIAGNOSTIC: "true" });
   assert.deepEqual(body, { before: source, after: source, refresh: ["openai/gpt-4.1-mini"], attempt: env.ATTEMPT_ID, prompts: { "openai/gpt-4.1-mini": ["matrix-rain"] }, diagnostic: true });
